@@ -10,7 +10,7 @@ namespace Domain.Film.Entities
         public string Name { get; }
         public string Description { get; }
         public string OriginalName { get; }
-        public Date PublishAt { get; }
+        public Date PublishDate { get; }
         public Director Director { get; }
         public readonly List<Actor> actors = [];
         public readonly List<Genre> categories = [];
