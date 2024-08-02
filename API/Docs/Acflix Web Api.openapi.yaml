@@ -1,0 +1,1062 @@
+openapi: 3.1.0
+info:
+  title: Acflix Web Api
+  description: ''
+  version: 1.0.0
+tags: []
+paths:
+  /films:
+    get:
+      summary: Get Several Films
+      deprecated: false
+      description: >-
+        Get Acflix catalog information for multiple films identified by their
+        Acflix IDs.
+      tags: []
+      parameters:
+        - name: ids
+          in: query
+          description: >-
+            A comma-separated list of the Acflix IDs for the films. Maximum: 20
+            IDs.
+          required: true
+          example:
+            - >-
+              dc74374f-53bd-474d-9f87-47e574833c92,29554369-a166-466f-9adc-6e29d77c6e5c
+          schema:
+            type: array
+            items:
+              type: string
+            uniqueItems: true
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &ref_1
+                  $ref: '#/components/schemas/Film'
+      security: []
+  /films/{id}:
+    get:
+      summary: Get Film
+      deprecated: false
+      description: Get Acflix catalog information for a single films.
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: The Acflix Id of films
+          required: true
+          example: ad4123da-7221-4744-9ab2-37f01933c06b
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilmDetils'
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: &ref_0
+                $ref: '#/components/schemas/ErrorReponse'
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+  /films/{id}/comments:
+    get:
+      summary: Get FIlm Comments
+      deprecated: false
+      description: >-
+        Get Acflix's comments. Optional parameters can be used to limit the
+        number of comments returned.
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          example: dc74374f-53bd-474d-9f87-47e574833c92
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: >-
+            The index of the first item to return. Default: 0 (the first item).
+            Use with limit to get the next set of items.
+          required: false
+          example: 0
+          schema:
+            type: integer
+            default: 1
+            examples:
+              - 1
+            minimum: 1
+        - name: limit
+          in: query
+          description: >-
+            The maximum number of items to return. Default: 20. Minimum: 1.
+            Maximum: 50.
+          required: false
+          example: 10
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 50
+            default: 20
+        - name: sort
+          in: query
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+  /films/{id}/commnets:
+    post:
+      summary: Comment to Film
+      deprecated: false
+      description: Post a comment to current film
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: 'null'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+  /me/films:
+    get:
+      summary: Get User's Saved Films
+      deprecated: false
+      description: >-
+        Get a list of the films saved in the current Spotify user's 'Your Film'
+        library.
+      tags: []
+      parameters:
+        - name: offset
+          in: query
+          description: >-
+            The index of the first item to return. Default: 0 (the first item).
+            Use with limit to get the next set of items.
+          required: false
+          example: 10
+          schema:
+            type: number
+        - name: limit
+          in: query
+          description: >-
+            The maximum number of items to return. Default: 20. Minimum: 1.
+            Maximum: 50.
+          required: false
+          example: 10
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalItems:
+                    type: number
+                  items:
+                    type: array
+                    items: *ref_1
+                  isFirst:
+                    type: boolean
+                  isLast:
+                    type: boolean
+                  page:
+                    type: number
+                  limit:
+                    type: number
+                  totalPage:
+                    type: number
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+    put:
+      summary: Save Albums for Current User
+      deprecated: false
+      description: Save one or more films to the current user's 'Your Films' library.
+      tags: []
+      parameters:
+        - name: ids
+          in: query
+          description: >-
+            A comma-separated list of the Acflix IDs for the films. Maximum: 20
+            IDs.
+          required: false
+          example:
+            - >-
+              dc74374f-53bd-474d-9f87-47e574833c92,29554369-a166-466f-9adc-6e29d77c6e5c
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: 'null'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+    delete:
+      summary: Remove Users' Saved Films
+      deprecated: false
+      description: Remove one or more films from the current user's 'Your Film' library.
+      tags: []
+      parameters:
+        - name: ids
+          in: query
+          description: >-
+            A comma-separated list of the Acflix IDs for the films. Maximum: 20
+            IDs.
+          required: false
+          example:
+            - >-
+              dc74374f-53bd-474d-9f87-47e574833c92,29554369-a166-466f-9adc-6e29d77c6e5c
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+  /me/films/contains:
+    get:
+      summary: Check User Saved Films
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: ids
+          in: query
+          description: >-
+            A comma-separated list of the Acflix IDs for the films. Maximum: 20
+            IDs.
+          required: false
+          example:
+            - >-
+              dc74374f-53bd-474d-9f87-47e574833c92,29554369-a166-466f-9adc-6e29d77c6e5c
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: 'null'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+      security: []
+  /browse/films/new-releases:
+    get:
+      summary: Get New Releases
+      deprecated: false
+      description: Get a list of new Films releases featured in Acflix
+      tags: []
+      parameters:
+        - name: offset
+          in: query
+          description: >-
+            The index of the first item to return. Default: 0 (the first item).
+            Use with limit to get the next set of items.
+          required: false
+          example: 0
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: >-
+            The maximum number of items to return. Default: 20. Minimum: 1.
+            Maximum: 50.
+          required: false
+          example: 10
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalItems:
+                    type: number
+                  items:
+                    type: array
+                    items: *ref_1
+                  isFirst:
+                    type: boolean
+                  isLast:
+                    type: boolean
+                  page:
+                    type: number
+                  limit:
+                    type: number
+                  totalPage:
+                    type: number
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+  /films/{id}/relation:
+    get:
+      summary: Get Related FIlms
+      deprecated: false
+      description: Get a list of related Films featured in Acflix
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: The Acflix Id of films
+          required: true
+          example: ad4123da-7221-4744-9ab2-37f01933c06b
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: >-
+            The index of the first item to return. Default: 0 (the first item).
+            Use with limit to get the next set of items.
+          required: false
+          example: 0
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: >-
+            The maximum number of items to return. Default: 20. Minimum: 1.
+            Maximum: 50.
+          required: false
+          example: 10
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items: *ref_1
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+  /films/{id}/episodes:
+    get:
+      summary: 'Get Film''s Episodes '
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items: &ref_6
+                  $ref: '#/components/schemas/Episode'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+        '401':
+          description: Bad or expired token
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Resource not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                required:
+                  - code
+                  - message
+      security: []
+components:
+  schemas:
+    FilmStatus:
+      type: string
+      enum:
+        - pending
+        - complete
+        - released
+      examples:
+        - complete
+    Film:
+      type: object
+      properties:
+        id: &ref_3
+          description: ID
+          $ref: '#/components/schemas/ID'
+        type: &ref_7
+          $ref: '#/components/schemas/FilmType'
+        name:
+          type: string
+          description: name
+          faker: commerce.productName
+        orignalName:
+          type: string
+          faker: company.name
+        country:
+          type: string
+          faker: address.countryCode
+        language:
+          type: string
+          faker: address.countryCode
+        poster:
+          type: array
+          items: &ref_2
+            $ref: '#/components/schemas/Image'
+        cover:
+          type: array
+          items: *ref_2
+        duration:
+          type: integer
+          faker: datatype.number
+        label:
+          type: string
+          faker: address.cityName
+        createdAt:
+          type: number
+        genres:
+          type: array
+          items: &ref_4
+            $ref: '#/components/schemas/Genre'
+        actors:
+          type: array
+          items: &ref_5
+            $ref: '#/components/schemas/Actor'
+        status:
+          $ref: '#/components/schemas/FilmStatus'
+        totalEpisode:
+          type:
+            - integer
+            - 'null'
+        currentEpisode:
+          type:
+            - integer
+            - 'null'
+        director:
+          type: string
+      required:
+        - id
+        - type
+        - name
+        - orignalName
+        - country
+        - language
+        - poster
+        - cover
+        - duration
+        - label
+        - createdAt
+        - genres
+        - actors
+        - status
+        - director
+    CommentRequest:
+      type: object
+      properties:
+        content:
+          type: string
+          examples:
+            - This is commnet
+      required:
+        - content
+    VoteRequest:
+      type: object
+      properties:
+        vote:
+          type: number
+          minimum: 1
+          maximum: 5
+          examples:
+            - 5
+      required:
+        - vote
+    PageResponse:
+      type: object
+      properties:
+        totalItems:
+          type: number
+        items:
+          type: array
+          items:
+            type: object
+            properties: {}
+        isFirst:
+          type: boolean
+        isLast:
+          type: boolean
+        page:
+          type: number
+        limit:
+          type: number
+        totalPage:
+          type: number
+    Comment:
+      type: object
+      properties:
+        content:
+          type: string
+          faker: random.word
+        user:
+          $ref: '#/components/schemas/SimpleUser'
+        createdAt:
+          type: number
+    SimpleUser:
+      type: object
+      properties:
+        id: *ref_3
+        name:
+          type: string
+          faker: name.fullName
+        avatar:
+          type: string
+          faker: image.imageUrl
+    ErrorReponse:
+      type: object
+      properties:
+        status:
+          type: number
+          description: status
+          minimum: 400
+          maximum: 500
+          examples:
+            - 404
+        message:
+          type: string
+          examples:
+            - Resouse not found
+      required:
+        - status
+        - message
+    Episode:
+      type: object
+      properties:
+        id: *ref_3
+        index:
+          type: number
+          examples:
+            - 1
+          description: index of episode
+        label:
+          type: string
+          examples:
+            - Tập 1
+          description: lable
+        name:
+          type: string
+          examples:
+            - Hoài ngọc
+        sourceId: *ref_3
+      required:
+        - id
+    FilmType:
+      type: string
+      enum:
+        - series
+        - movie
+      minLength: 0
+    FilmDetils:
+      type: object
+      description: Full film information
+      properties:
+        id: *ref_3
+        name:
+          type: string
+          description: The name of the film empty if film takedown
+          examples:
+            - Chú Thuật Hồi Chiến (Phần 2)
+          faker: music.songName
+        originalName:
+          type: string
+          description: The English Name of the film
+          examples:
+            - Jujutsu Kaisen (Season 2)
+          faker: music.songName
+        description:
+          type: string
+          examples:
+            - >-
+              Vì một lý do kỳ lạ nào đó, nam sinh Itadori Yuuji, mặc dù có thể
+              chất hoàn hảo nhưng lại đâm đầu vào tham gia hội nghiên cứu tâm
+              linh. Vào ngày nọ, hội nghiên cứu có được vật nguyền bị phong ấn
+              và một thành viên đã vô tình mở phong ấn, khiến các thành viên
+              khác lần lượt bị tấn công. Để cứu bạn, Yuuji buộc phải ra tay.
+          faker: commerce.productDescription
+        genres:
+          type: array
+          items: *ref_4
+          examples:
+            - - animation
+              - action
+          description: The array of genre
+        director:
+          type: string
+          description: The name of the director
+          examples:
+            - Park Seong Hu
+          faker: name.fullName
+        actors:
+          type: array
+          items: *ref_5
+        country:
+          type: string
+          description: An ISO 3166-1 alpha-2 country code. If a country code is specified
+          examples:
+            - VN
+          faker: address.countryCode
+        duration:
+          type: number
+          description: duration of film if series is duration per eposide
+          faker: datatype.number
+        eposides:
+          description: Total released eposide empty if film is movie
+          type: array
+          items: *ref_6
+        releaseDate:
+          type: string
+          examples:
+            - 2023
+          faker: datatype.datetime
+        releaseDatePrecision:
+          type: string
+          enum:
+            - day
+            - month
+            - year
+          examples:
+            - year
+        type: *ref_7
+        restriction:
+          type: number
+          examples:
+            - 18
+          minimum: 1
+          maximum: 100
+          default: null
+        poster:
+          description: Cover art with 2x3 some size
+          type: array
+          items: *ref_2
+        cover:
+          description: Cover art with 3x2 some size
+          type: array
+          items: *ref_2
+        status:
+          type: string
+          description: status
+          enum:
+            - released
+            - pending
+            - complete
+          examples:
+            - complete
+    ID:
+      type: string
+      description: UUID
+      examples:
+        - ad4123da-7221-4744-9ab2-37f01933c06b
+      faker: datatype.uuid
+    Actor:
+      type: object
+      properties:
+        id: *ref_3
+        name:
+          type: string
+          examples:
+            - Yuichi Nakamura
+          faker: name.fullName
+        images:
+          type: array
+          items: *ref_2
+          description: Avatar of atcor
+    Genre:
+      type: string
+      enum:
+        - action
+        - adventure
+        - comedy
+        - drama
+        - horror
+        - romance
+        - scfi
+        - fantasy
+        - history
+        - crime
+        - animation
+        - mystery
+        - thriller
+        - documentory
+        - musical
+        - sport
+        - war
+        - family
+        - western
+        - biography
+      examples:
+        - animation
+    Image:
+      type: object
+      description: The cover art for the album in various sizes, widest first.
+      properties:
+        url:
+          type: string
+          description: The source URL of the image.
+          examples:
+            - https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228
+          faker: image.imageUrl
+        width:
+          type: number
+          examples:
+            - 300
+          minimum: 0
+          faker: random.numeric
+        height:
+          type: number
+          examples:
+            - 300
+          minimum: 0
+          faker: random.numeric
+      required:
+        - url
+        - width
+        - height
+  securitySchemes: {}
+servers: []
