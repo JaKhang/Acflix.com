@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applicaion.Models.Category
+namespace Applicaion.Models.Actor
 {
-    public record CategoryResponse(Guid Id, string Name, List<ImageResponse> Icons)
-    {
+    public record ActorResponse(Guid id,string name,List<ImageResponse> Images)
 
+    {
     }
 }
