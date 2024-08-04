@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applicaion.Queries.Film
+namespace Domain.Base.ValueObjects
 {
-    public interface IFilmQueries
+    internal class Country
     {
-
     }
 }

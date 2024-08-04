@@ -1,7 +1,8 @@
-﻿namespace 
+﻿using Domain.Base;
+namespace 
     Domain.Film.ObjectValues
 {
-    public class Genre : Enumeration
+    public class Genre : Enumeration<Genre>
     {
         public static readonly Genre ACTION = new(0, "action");
         public static readonly Genre ADVENTURE = new(1, "adventure");

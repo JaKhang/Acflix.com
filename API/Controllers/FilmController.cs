@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/films")]
     [ApiController]
     public class FilmController : ControllerBase
     {
@@ -18,28 +18,26 @@ namespace API.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<FilmController>/5
-        // https://localhost//api/v1/films/{id}
+        // GET api/films/{id}
         [HttpGet("{id}")]
         public string Get(Guid id)
         {
-            Film film;
             return "value";
         }
 
-        // POST api/<FilmController>
+        // POST api/films
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<FilmController>/5
+        // PUT api/films/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<FilmController>/5
+        // DELETE api/films/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

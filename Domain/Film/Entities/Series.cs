@@ -1,19 +1,25 @@
-﻿using Domain.Film.ObjectValues;
+﻿using Domain.Exceptions;
+using Domain.Film.ObjectValues;
 
 namespace Domain.Film.Entities
 {
     public class Series : Film
     {
-        public readonly ISet<Episode> Episodes = new HashSet<Episode>();
-        public bool IsComplated { get; set; }
+        private readonly List<Episode> _episodes = [];
+        public IReadOnlyList<Episode> Episodes => _episodes;
+        public int TotalEpisode { get; protected set; }
+        public int LastEpisode { get; protected set; }
+        public DateTime? LastReleasedEpisodeAt { get; protected set; }
 
 
         public void AddEpisode(string name, string label, Source source)
         {
-            if (IsComplated) throw new BusinessException("Series film cant not add episode because film is completed !");
+            if (Status == FilmStatus.COMPLETED) throw new BusinessException("Series film cant not add episode because film is completed !");
             int index = Episodes.Count + 1;
-            Episode episode = new(name, index, source, label is not null ? label : index.ToString(), this.Id);
-            Episodes.Add(episode);
+            Episode episode = new(name, index, source, label is not null ? label : index.ToString(), Id);
+            LastEpisode = index;
+            LastReleasedEpisodeAt = new DateTime();
+            _episodes.Add(episode);
         }
 
 

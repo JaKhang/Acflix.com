@@ -2,7 +2,6 @@
 {
     public interface IFilmRepository
     {
-
         Entities.Film Save(Entities.Film entity);
     }
 }

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applicaion.Queries.Film
+namespace Domain.Image.ValueObjects
 {
-    public interface IFilmQueries
+    public record Dimension(int Width, int Weight)
     {
-
     }
 }

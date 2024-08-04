@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Applicaion.Queries.Film
+namespace Domain.User
 {
-    public interface IFilmQueries
+    public interface IUserServiece
     {
-
+        
     }
 }

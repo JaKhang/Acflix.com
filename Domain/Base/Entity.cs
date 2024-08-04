@@ -16,6 +16,18 @@ namespace Domain.Base
             Id = id;
         }
 
+
+        public void Hide()
+        {
+            IsDeleted = true;
+        }
+
+        public void Show()
+        {
+
+            IsDeleted = false; 
+        }
+
         public override bool Equals(object? obj)
         {
             return Equals(obj as Entity);
