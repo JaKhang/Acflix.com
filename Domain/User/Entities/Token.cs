@@ -17,23 +17,23 @@ namespace Domain.User.Entities
 
         }
 
-        public Token(string value, int age, TokenType type) : base(new())
+        public Token(string code, int age, TokenType type) : base(new())
         {
-            Value = value;
+            Code = code;
             CreatedAt = DateTime.Now;
             Age = age;
             Active = true;
             Type = type;
         }
 
-        public string Value { get; internal set; }
+        public string Code { get; internal set; }
         public DateTime CreatedAt { get; internal set; }
         public int Age { get; internal set; }
         public bool Active { get; internal set; }
         public TokenType Type { get; internal set; }
-        public bool IsValid(string token, TokenType tokenType)
+        public bool IsValid(string code, TokenType tokenType)
         {
-            bool isValid = Value.Equals(token);
+            bool isValid = Code.Equals(code);
             return isValid && Active && tokenType == Type;
         }
 

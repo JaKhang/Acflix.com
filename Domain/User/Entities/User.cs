@@ -75,7 +75,7 @@ namespace Domain.User.Entities
 
         public bool ResetPassword(string newPassword, string resetToken)
         {
-            Token? token = GetToken(resetToken, TokenType.RESET);
+            Token? token = GetToken(resetToken, TokenType.RESSET);
             if (token is not null)
             {
                 if (token.IsExpired()) throw new ExpiredTokenException("Verify token " + resetToken + " is exprired !");

@@ -7,9 +7,14 @@ using System.Threading.Tasks;
 
 namespace Domain.User.ObjectValue
 {
-    public enum TokenType
+    public class TokenType : Enumeration<TokenType>
     {
-        VERIFY,
-        RESET
+        public static readonly TokenType VERIFY = new (0, "verify");
+        public static readonly TokenType RESSET = new(1, "reset");
+
+        private TokenType(int id, string name) : base(id, name)
+        {
+
+        }
     }
 }
