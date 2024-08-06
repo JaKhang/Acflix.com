@@ -17,7 +17,7 @@ namespace Domain.User.Entities
 
         }
 
-        public Token(string code, int age, TokenType type) : base(new())
+        public Token(string code, int age, TokenType type) : base(new ID())
         {
             Code = code;
             CreatedAt = DateTime.Now;
@@ -33,8 +33,8 @@ namespace Domain.User.Entities
         public TokenType Type { get; internal set; }
         public bool IsValid(string code, TokenType tokenType)
         {
-            bool isValid = Code.Equals(code);
-            return isValid && Active && tokenType == Type;
+            var isValid = Code.Equals(code);
+            return isValid && Active && tokenType.Equals(Type);
         }
 
         public bool IsExpired()

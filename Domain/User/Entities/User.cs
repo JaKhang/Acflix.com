@@ -23,6 +23,7 @@ namespace Domain.User.Entities
         public UserProvider Provider { get; protected set; }
         public bool IsEnabled { get; protected set; }
         public ID? AvatarId { get; protected set; }
+        public string refreshToken { get; set; } = string.Empty;
 
         private readonly List<Token> _tokens = [];
         public virtual ISet<ID> SavedFilms { get; protected set; } = new HashSet<ID>();
@@ -31,7 +32,7 @@ namespace Domain.User.Entities
         //getter
         public virtual IReadOnlyList<Token> Tokens => _tokens;
 
-        public User() : base(new())
+        public User() : base(new ID())
         {
         }
 
@@ -60,17 +61,14 @@ namespace Domain.User.Entities
             if (VerifiedAt is null)
                 return false;
 
-            Token? token = GetToken(verifyToken, TokenType.VERIFY);
-            if (token is not null)
-            {
-                if (token.IsExpired()) throw new ExpiredTokenException("Verify token " + verifyToken + " is exprired !");
+            var token = GetToken(verifyToken, TokenType.VERIFY);
+            if (token is null) throw new InvalidTokenException("Verify token " + verifyToken + " is invalid !");
+            if (token.IsExpired()) throw new ExpiredTokenException("Verify token " + verifyToken + " is expired !");
 
-                VerifiedAt = DateTime.Now;
-                token.Active = false;
-                return true;
-            }
+            VerifiedAt = DateTime.Now;
+            token.Active = false;
+            return true;
 
-            throw new InvalidTokenException("Verify token " + verifyToken + " is invalid !");
         }
 
         public bool ResetPassword(string newPassword, string resetToken)
@@ -78,7 +76,7 @@ namespace Domain.User.Entities
             Token? token = GetToken(resetToken, TokenType.RESSET);
             if (token is not null)
             {
-                if (token.IsExpired()) throw new ExpiredTokenException("Verify token " + resetToken + " is exprired !");
+                if (token.IsExpired()) throw new ExpiredTokenException("Verify token " + resetToken + " is expired !");
 
                 Password = newPassword;
                 token.Active = false;
@@ -90,7 +88,8 @@ namespace Domain.User.Entities
 
         public bool AddToken(string token, int age, TokenType tokenType)
         {
-            Token t = new Token(token, age, tokenType);
+            var t = new Token(token, age, tokenType);
+            _tokens.Add(t);
             return true;
         }
         
@@ -106,7 +105,7 @@ namespace Domain.User.Entities
         public void Update(DateOnly? birthday, string? fistName, string? lastName, string? phoneNumber)
         {
             if(birthday is not null)Birthday = birthday;
-            if(fistName is not null && lastName is not null) Name = new(fistName, lastName);
+            if(fistName is not null && lastName is not null) Name = new Name(fistName, lastName);
             if(phoneNumber is not null) PhoneNumber = phoneNumber;
         }
 
