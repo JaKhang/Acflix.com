@@ -12,7 +12,7 @@ namespace Application.Queries
 {
     public interface ICategoryQueries
     {
-        Task<IEnumerable<CategoryResponse>> FindAll(PageRequest pageRequest);
+        Task<Page<CategoryResponse>> FindAll(PageRequest pageRequest);
 
         Task<IEnumerable<FilmResponse>> FindFilmsById(Guid categoryId, PageRequest pageRequest);
 

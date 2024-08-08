@@ -12,6 +12,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Caterory;
 using Domain.User.Entities;
 
 namespace Infrastructure.Persistence.Config
@@ -19,6 +20,8 @@ namespace Infrastructure.Persistence.Config
     public class DatabaseContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {

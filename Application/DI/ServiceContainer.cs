@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Commands;
 using Application.Mappers;
+using Application.Queries;
 using Domain.User.Repositories;
 using Infrastructure.Authentication.Config;
 using Infrastructure.Persistence.Config;
@@ -28,7 +29,10 @@ namespace Application.DI
 
 
             services.AddScoped<IAuthenticationCommands, AuthenticationCommand>();
+            services.AddScoped<IFilmCommands, FilmCommand>();
+            services.AddScoped<ICategoryQueries, CategoryQueries>();
             services.AddScoped<UserMapper, UserMapper>();
+            services.AddScoped<ImageMapper, ImageMapper>();
             return services;
         }
     }

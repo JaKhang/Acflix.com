@@ -11,13 +11,26 @@ namespace Application.Commands
 {
     public interface IFilmCommands
     {
+        /// <summary>
+        /// User tạo comments map request thành Domain.Comment thêm vào film save film lại
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <param name="userId"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         Task Comment(Guid filmId, Guid userId, CommentRequest request);
 
         Task Vote(Guid filmId, Guid userId, VoteRequest request);
 
+        /// <summary>
+        /// set deleted = true
+        /// </summary>
+        /// <param name="filmId"></param>
+        /// <returns></returns>
         Task Hide(Guid filmId);
 
         Task Delete(Guid filmId);
+
 
         Task<Guid> Create(FilmRequest request);
     }

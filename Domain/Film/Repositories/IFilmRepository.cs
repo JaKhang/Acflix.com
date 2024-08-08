@@ -1,7 +1,12 @@
-﻿namespace Domain.Film.Repositories
+﻿using Domain.Base.ValueObjects;
+
+namespace Domain.Film.Repositories
 {
     public interface IFilmRepository
     {
-        Entities.Film Save(Entities.Film entity);
+        Task<Entities.Film>  SaveAsync(Entities.Film entity);
+
+        Task<Entities.Film> FindByIdAsync(ID id);
+
     }
 }
