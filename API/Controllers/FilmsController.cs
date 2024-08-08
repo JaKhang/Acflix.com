@@ -1,6 +1,7 @@
 ﻿
 using System.Security.Claims;
 using Application.Commands;
+using Application.Models.Base;
 using Application.Models.Comment;
 using Application.Models.Film;
 using Application.Queries;
@@ -14,7 +15,7 @@ namespace API.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class FilmsController(IFilmQueries filmQueries, IFilmCommands filmCommands) : ControllerBase
+    public class FilmsController(IFilmQueries filmQueries, IFilmCommands filmCommands, ICommentQueries commentQueries) : ControllerBase
     {
         // GET: /api/v1/films
         [HttpGet]
@@ -23,7 +24,6 @@ namespace API.Controllers
 
             return await filmQueries.FindByIds(ids);
         }
-
         // GET api/films/{id}
         [HttpGet("{id}")]
         public async Task<FilmResponse> Get(string id)
@@ -38,6 +38,15 @@ namespace API.Controllers
             var userId = Guid.NewGuid();
             await filmCommands.Comment(Guid.Parse(id), userId, request);
         }
+
+        [HttpGet("{id}/comments")]
+        public async Task<Page<CommentResponse>> GetComments(string id, int offset, int limit, string sort)
+        {
+            var pageRequest = new PageRequest(offset, limit, sort);
+            return await commentQueries.FindByFilmId(Guid.Parse(id), pageRequest);
+        }
+
+
 
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Film.Repositories;
 using Domain.User.Repositories;
 using Infrastructure.Authentication;
 using Infrastructure.Authentication.Config;
@@ -46,6 +47,7 @@ namespace Infrastructure.DI
             });
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IFilmRepository, FilmRepository>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<ICodeGenerator, CodeGenerator>();
             services.AddScoped<IJwtProvider, JwtProvider>();

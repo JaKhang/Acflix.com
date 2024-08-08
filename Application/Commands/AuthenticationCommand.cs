@@ -24,9 +24,18 @@ public class AuthenticationCommand(IUserRepository userRepository, IEmailSender 
         throw new NotImplementedException();
     }
 
-    public Task RequestVerifyCode(string email)
+    public async Task RequestVerifyCode(string email)
     {
-        throw new NotImplementedException();
+        //tao code
+        var code = codeGenerator.Generate();
+        var user = await userRepository.FindByEmailAsync(email);
+        if (user is null) throw new UserNotFoundException("Not found user with email " + email);
+        user.AddCode(code, 5, TokenType.VERIFY);
+
+        //luu code
+        user = await userRepository.SaveAsync(user);
+
+        var task = emailSender.SendVerify(email, code);
     }
 
     public async Task RequestResetPasswordCode(string email)

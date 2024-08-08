@@ -10,7 +10,7 @@ namespace Application.Commands
     public interface IAuthenticationCommands
     {
         /// <summary>
-        /// Verify user
+        /// Verify user//
         /// </summary>
         /// <param name="email"></param>
         /// <param name="code"></param>
@@ -26,6 +26,7 @@ namespace Application.Commands
         Task ResetPassword(string email, ResetPasswordRequest request);
 
 
+        //tạo code => lưu csld => gửi mail
         Task RequestVerifyCode(string email);
 
         /// <summary>

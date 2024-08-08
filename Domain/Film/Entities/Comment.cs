@@ -11,5 +11,12 @@ namespace Domain.Film.Entities
         public Comment() : base(new())
         {
         }
+
+        public Comment(string content, ID userId, ID filmId) : base(new ID())
+        {
+            Content = content;
+            UserId = userId;
+            FilmId = filmId;
+        }
     }
 }

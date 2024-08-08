@@ -42,10 +42,13 @@ namespace API.Controllers
         [HttpGet("test")]
         [Authorize(Roles = "ADMIN")]
         public string Test(){
+            // get current user id
             var userPrincipal = HttpContext.User;
-            // logger.LogInformation(userPrincipal.Claims.Select(c => c.Value).ToString());
+            var userId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             var s = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
-            return s;
+
+            return userId;
         }
 
 
