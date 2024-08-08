@@ -1,13 +1,7 @@
-﻿using Domain.Film.Entities;
-using Domain.Image.Entities;
+﻿using Domain.Image.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure.Persistence.Config
 {
@@ -18,16 +12,17 @@ namespace Infrastructure.Persistence.Config
         {
 
             builder.ToTable("Images");
-            builder.HasMany<Varient>().WithOne().HasForeignKey(v => v.ImageId).OnDelete(DeleteBehavior.ClientCascade);
-            builder.Navigation(i => i.Varients).Metadata.SetField("_varients");
+            builder.HasMany<Variant>().WithOne().HasForeignKey("ImageId").OnDelete(DeleteBehavior.ClientCascade);
+            builder.Navigation(i => i.Variants).Metadata.SetField("_variants");
         }
     }
 
-    public class VarientConfig : IEntityTypeConfiguration<Varient>
+    public class VariantConfig : IEntityTypeConfiguration<Variant>
     { 
-        public void Configure(EntityTypeBuilder<Varient> builder)
+        public void Configure(EntityTypeBuilder<Variant> builder)
         {
-            builder.ToTable("ImageVarients");
+            builder.ToTable("ImageVariants");
+            builder.HasOne<Image>().WithMany(f => f.Variants).HasForeignKey(c => c.ImageId).OnDelete(DeleteBehavior.ClientCascade);
             builder.OwnsOne(v => v.Dimension);
 
         }

@@ -1,8 +1,12 @@
 ﻿
+using System.Security.Claims;
 using Application.Commands;
 using Application.Models.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using RegisterRequest = Application.Models.User.RegisterRequest;
 
 namespace API.Controllers
 {
@@ -27,6 +31,21 @@ namespace API.Controllers
         {
             var email = string.Empty;
             return  authCommands.RequestResetPasswordCode(email);
+        }
+
+        [HttpPost("authenticate")]
+        public async Task<AuthResponse> Register([FromBody] AuthRequest request)
+        {
+            return await authCommands.Authenticate(request);
+        }
+
+        [HttpGet("test")]
+        [Authorize(Roles = "ADMIN")]
+        public string Test(){
+            var userPrincipal = HttpContext.User;
+            // logger.LogInformation(userPrincipal.Claims.Select(c => c.Value).ToString());
+            var s = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
+            return s;
         }
 
 

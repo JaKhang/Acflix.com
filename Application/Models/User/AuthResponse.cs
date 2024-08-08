@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.Models.User
 {
-    public class AuthResponse
+    public record AuthResponse(string RefreshToken, string AccessToken)
     {
+
     }
 }

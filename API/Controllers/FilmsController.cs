@@ -1,4 +1,5 @@
 ﻿
+using System.Security.Claims;
 using Application.Commands;
 using Application.Models.Comment;
 using Application.Models.Film;
@@ -33,11 +34,12 @@ namespace API.Controllers
         [HttpPost("{id}/comments")]
         public async Task Put(string id, [FromBody] CommentRequest request)
         {
-            var userPrincipal = HttpContext.User;
-            
+
             var userId = Guid.NewGuid();
             await filmCommands.Comment(Guid.Parse(id), userId, request);
         }
+
+
 
 
     }

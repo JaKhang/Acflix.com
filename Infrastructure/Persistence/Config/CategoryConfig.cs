@@ -20,8 +20,8 @@ namespace Infrastructure.Persistence.Config
 
                 d.ToTable("CategoryFilmRelationship");
                 d.Property(v => v.Value).HasColumnName("filmsId");
-                d.WithOwner().HasForeignKey("caterotyId");
-                d.HasKey("caterotyId", "Code");
+                d.WithOwner().HasForeignKey("categoryId");
+                d.HasKey("categoryId", "Value");
             });
         }
     }

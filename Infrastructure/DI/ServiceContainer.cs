@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.User.Repositories;
+using Infrastructure.Authentication;
 using Infrastructure.Authentication.Config;
+using Infrastructure.Notifications;
 using Infrastructure.Persistence.Config;
+using Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +44,11 @@ namespace Infrastructure.DI
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtProperties.SecretKey))
                 };
             });
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<ICodeGenerator, CodeGenerator>();
+            services.AddScoped<IJwtProvider, JwtProvider>();
             return services;
         }
     }

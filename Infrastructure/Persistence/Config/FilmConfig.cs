@@ -38,15 +38,10 @@ namespace Infrastructure.Persistence.Config
             builder.Property(f => f.Quality).HasConversion<QualityConverter>();
             builder.Property(f => f.Status).HasConversion<FilmStatusConverter>();
             builder.OwnsOne(f => f.ReleaseDate);
-            builder.HasMany(f => f.Comments).WithOne().HasForeignKey(c => c.FilmId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(f => f.Votes).WithOne().HasForeignKey(c => c.FilmId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(f => f.Comments).WithOne().HasForeignKey("FilmId").OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(f => f.Votes).WithOne().HasForeignKey("FilmId").OnDelete(DeleteBehavior.Cascade);
 
-            /* builder.OwnsMany(f => f.Genres, g =>
-             {
-                 g.ToTable("FilmGenreRelationship");
-                 g.WithOwner().HasForeignKey("FilmId");
-                 g.HasKey("FilmId", "Genre");
-             });*/
+
             builder.Navigation(f => f.Genres).Metadata.SetField("_genres");
             builder.Property(f => f.Genres).HasConversion(
                   v => string.Join(',', v.Select(t => t.Id)),
@@ -59,7 +54,7 @@ namespace Infrastructure.Persistence.Config
                 ac.ToTable("FilmActorRelationship");
                 ac.Property(f => f.Value).HasColumnName("actorId");
                 ac.WithOwner().HasForeignKey("filmId");
-                ac.HasKey("filmId", "Code");
+                ac.HasKey("filmId", "Value");
 
             });
             builder.OwnsMany(film => film.RelatedFilmIds, ac =>
@@ -68,12 +63,11 @@ namespace Infrastructure.Persistence.Config
                 ac.Property(f => f.Value).HasColumnName("relatedFilmId");
                 ac.WithOwner().HasForeignKey("filmId");
                 ac.WithOwner().HasForeignKey("relatedFilmId");
-                ac.HasKey("filmId", "Code");
+                ac.HasKey("filmId", "Value");
 
             });
             builder.HasOne<Director>().WithMany().HasForeignKey(f => f.DirectorId).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasOne<Image>().WithMany().HasForeignKey(f => f.PosterId).OnDelete(DeleteBehavior.ClientCascade);
-            builder.HasMany(f => f.Comments).WithOne().HasForeignKey(c => c.FilmId);
             builder.Navigation(f => f.Comments).Metadata.SetField("_comments");
             builder.Navigation(f => f.ActorIds).Metadata.SetField("_actorIds");
             builder.Navigation(f => f.Votes).Metadata.SetField("_votes");
@@ -102,8 +96,6 @@ namespace Infrastructure.Persistence.Config
         public void Configure(EntityTypeBuilder<Movie> builder)
         {
             builder.ToTable("Movies");
-
-
             builder.OwnsOne(m => m.Source);
         }
     }
@@ -127,7 +119,7 @@ namespace Infrastructure.Persistence.Config
             builder.ToTable("Comments");
 
             builder.Property(c => c.UserId).HasConversion<IDConverter>();
-            builder.HasOne<Film>().WithMany().HasForeignKey(c => c.FilmId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne<Film>().WithMany(f => f.Comments).HasForeignKey(c => c.FilmId).OnDelete(DeleteBehavior.ClientCascade);
         }
 
 
@@ -141,7 +133,7 @@ namespace Infrastructure.Persistence.Config
 
             builder.ToTable("Votes");
             builder.Property(c => c.UserId).HasConversion<IDConverter>();
-            builder.HasOne<Film>().WithMany().HasForeignKey(c => c.FilmId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne<Film>().WithMany(f => f.Votes).HasForeignKey(c => c.FilmId).OnDelete(DeleteBehavior.ClientCascade);
 
         }
     }

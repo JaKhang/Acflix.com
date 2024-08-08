@@ -1,13 +1,13 @@
 ﻿namespace Domain.Base.ValueObjects
 {
-    public record Date(Rrecision Rrecision, DateTime Value)
+    public record Date(Precision precision, DateTime Value)
     {
     }
 
-    public enum Rrecision
+    public enum Precision
     {
         Year,
         Month,
-        day,
+        Day,
     }
 }

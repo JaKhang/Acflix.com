@@ -22,19 +22,16 @@ public sealed class JwtProvider : IJwtProvider
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_properties.SecretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-        var userClaims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email)
-        };
+        var userClaims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)).ToList();
+        userClaims.Add(new Claim(ClaimTypes.Email, user.Email));
+        userClaims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+
         var token = new JwtSecurityToken(
                 issuer: _properties.Issuer,
                 audience: _properties.Audience,
                 claims: userClaims,
                 expires: DateTime.Now.AddMinutes(_properties.Expiry),
                 signingCredentials: credentials
-
-
             );
 
         return _jwtHandler.WriteToken(token);

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Image.Entities
 {
-    public class Varient : Entity
+    public class Variant : Entity
     {
-        public Varient() : base(new())
+        public Variant() : base(new())
         {
         }
 
-        public Varient(Dimension dimension, string reference, ID imageId) : base(new())
+        public Variant(Dimension dimension, string reference, ID imageId) : base(new())
         {
             Dimension = dimension;
             Reference = reference;

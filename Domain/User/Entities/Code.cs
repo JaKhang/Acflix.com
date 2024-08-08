@@ -9,31 +9,33 @@ using System.Threading.Tasks;
 
 namespace Domain.User.Entities
 {
-    public class Token : Entity
+    public class Code : Entity
 
     {
-        public Token() : base(new())
+        public Code(ID userId) : base(new ID())
         {
-
+            UserId = userId;
         }
 
-        public Token(string code, int age, TokenType type) : base(new ID())
+        public Code(string value, int age, TokenType type, ID userId) : base(new ID())
         {
-            Code = code;
+            Value = value;
             CreatedAt = DateTime.Now;
             Age = age;
             Active = true;
             Type = type;
+            UserId = userId;
         }
 
-        public string Code { get; internal set; }
-        public DateTime CreatedAt { get; internal set; }
+        public string Value { get; internal set; }
         public int Age { get; internal set; }
         public bool Active { get; internal set; }
         public TokenType Type { get; internal set; }
+        public ID UserId { get; internal set; }
+
         public bool IsValid(string code, TokenType tokenType)
         {
-            var isValid = Code.Equals(code);
+            var isValid = Value.Equals(code);
             return isValid && Active && tokenType.Equals(Type);
         }
 

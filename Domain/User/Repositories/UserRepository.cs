@@ -10,12 +10,14 @@ namespace Domain.User.Repositories
 {
     public interface IUserRepository
     {
-        Entities.User Save(Entities.User user);
+        Task<Entities.User> SaveAsync(Entities.User user);
 
-        Token Save(Token token);
+        Code Save(Code code);
 
         Task<Entities.User> FindByIdAsync(ID id);
 
+        Task<Entities.User?> FindByEmailAsync(string email);
 
+        Task<bool> ExistByEmail(string email);
     }
 }

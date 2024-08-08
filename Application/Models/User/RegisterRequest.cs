@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.Models.User
 {
-    public class RegisterRequest
+    public record RegisterRequest(string Email, string FirstName, string LastName, string PhoneNumber, string Password, string ConfirmedPassword, DateOnly Birthday)
+
     {
     }
 }

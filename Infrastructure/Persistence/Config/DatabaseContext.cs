@@ -12,11 +12,14 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.User.Entities;
 
 namespace Infrastructure.Persistence.Config
 {
     public class DatabaseContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
+
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
         }
@@ -32,7 +35,10 @@ namespace Infrastructure.Persistence.Config
             modelBuilder.ApplyConfiguration(new EpisodeConfig());
             modelBuilder.ApplyConfiguration(new CommentConfig());
             modelBuilder.ApplyConfiguration(new VoteConfig());
-            modelBuilder.ApplyConfiguration(new VarientConfig());
+            modelBuilder.ApplyConfiguration(new VariantConfig());
+            modelBuilder.ApplyConfiguration(new UserConfig());
+            modelBuilder.ApplyConfiguration(new CodeConfig());
+
 
 
         }

@@ -11,7 +11,6 @@ namespace Test.Domain
 {
     public class EnumTest(ITestOutputHelper output)
     {
-        private readonly ITestOutputHelper _output;
 
 
         [Fact]

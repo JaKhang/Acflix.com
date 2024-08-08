@@ -1,12 +1,22 @@
-﻿using Application.Models.User;
+﻿using Application.Mappers;
+using Application.Models.User;
+using Domain.User.Entities;
+using Domain.User.ObjectValue;
+using Domain.User.Repositories;
+using Infrastructure.Authentication;
+using Infrastructure.Notifications;
 
 namespace Application.Commands;
 
-public class AuthenticationCommand : IAuthenticationCommands
+public class AuthenticationCommand(IUserRepository userRepository, IEmailSender emailSender, ICodeGenerator codeGenerator, IJwtProvider jwtProvider, UserMapper userMapper) : IAuthenticationCommands
 {
-    public Task Verify(string email, string code)
+
+    public async Task Verify(string email, string code)
     {
-        throw new NotImplementedException();
+        var user = await userRepository.FindByEmailAsync(email);
+        if (user is null) throw new UserNotFoundException();
+        user.Verify(code);
+        user = await userRepository.SaveAsync(user);
     }
 
     public Task ResetPassword(string email, ResetPasswordRequest request)
@@ -19,18 +29,48 @@ public class AuthenticationCommand : IAuthenticationCommands
         throw new NotImplementedException();
     }
 
-    public Task RequestResetPasswordCode(string email)
+    public async Task RequestResetPasswordCode(string email)
     {
-        throw new NotImplementedException();
+        var user = await userRepository.FindByEmailAsync(email);
+        if (user is null) throw new UserNotFoundException("Not found user with email " + email);
+        var code = codeGenerator.Generate();
+        user.AddCode(code, 5, TokenType.RESSET);
+        user = await userRepository.SaveAsync(user);
+        var task = emailSender.SendResetPassword(email, code);
+
+
     }
 
-    public Task<Guid> Register(RegisterRequest register)
+    public async Task<Guid> Register(RegisterRequest register)
     {
-        throw new NotImplementedException();
+
+        if (await userRepository.ExistByEmail(register.Email))
+            throw new UserAlreadyExistException("User Already exist with email " + register.Email);
+        var user = userMapper.Map(register);
+        user = await userRepository.SaveAsync(user);
+        return user.Id.Value;
     }
 
-    public Task<AuthResponse> Authenticate(AuthRequest request)
+    public async Task<AuthResponse> Authenticate(AuthRequest request)
     {
-        throw new NotImplementedException();
+        var user = await userRepository.FindByEmailAsync(request.Email);
+        if (user is null)
+            throw new UserAlreadyExistException("User not found with email " + request.Email);
+        var token = jwtProvider.Generate(user);
+        var response = new AuthResponse(user.RefreshToken, token);
+        return response;
+    }
+}
+
+public class UserAlreadyExistException(string userAlreadyExistWithEmail) : SystemException(userAlreadyExistWithEmail);
+
+public class UserNotFoundException: Exception
+{
+    public UserNotFoundException()
+    {
+    }
+
+    public UserNotFoundException(string? message) : base(message)
+    {
     }
 }

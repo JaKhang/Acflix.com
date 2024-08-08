@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models.User
 {
-    public record AuthRequest(string email, string password)
+    public record AuthRequest(string Email, string Password)
     {
     }
 }

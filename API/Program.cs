@@ -1,3 +1,4 @@
+using Application.DI;
 using Infrastructure.DI;
 using Infrastructure.Persistence.Config;
 using Microsoft.EntityFrameworkCore;
@@ -6,13 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.InfrastructureServices(builder.Configuration);
-
-
+builder.Services.ApplicationServices(builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 var app = builder.Build();
 

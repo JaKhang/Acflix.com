@@ -2,15 +2,11 @@
 using Domain.Base.ValueObjects;
 using Domain.Exceptions;
 using Domain.User.ObjectValue;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Domain.User.Entities
 {
+    // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class User : AggregateRoot
     {
         public Name Name { get; protected set; }
@@ -23,20 +19,17 @@ namespace Domain.User.Entities
         public UserProvider Provider { get; protected set; }
         public bool IsEnabled { get; protected set; }
         public ID? AvatarId { get; protected set; }
-        public string refreshToken { get; set; } = string.Empty;
-
-        private readonly List<Token> _tokens = [];
+        public string RefreshToken { get; protected set; } = string.Empty;
+        private readonly List<Code> _codes = [];
         public virtual ISet<ID> SavedFilms { get; protected set; } = new HashSet<ID>();
         public virtual ISet<ID> Histories { get; protected set; } = new HashSet<ID>();
-
-        //getter
-        public virtual IReadOnlyList<Token> Tokens => _tokens;
+        public virtual IReadOnlyList<Code> Codes => _codes;
 
         public User() : base(new ID())
         {
         }
 
-        public User(ID id, Name name, DateOnly birthday, string email, string phoneNumber, List<Role> roles, string password, DateTime? verifiedAt, ISet<Token> tokens, UserProvider provider, ID? avatarId) : base(id)
+        public User(Name name, DateOnly birthday, string email, string phoneNumber, List<Role> roles, string password, DateTime? verifiedAt, UserProvider provider, ID? avatarId) : base(new ID())
         {
             Name = name;
             Birthday = birthday;
@@ -49,11 +42,11 @@ namespace Domain.User.Entities
             AvatarId = avatarId;
         }
 
-        public Token? GetToken(string? verifyToken, TokenType type)
+        private Code? GetToken(string? verifyToken, TokenType type)
         {
             return verifyToken is null
                 ? throw new ArgumentNullException(nameof(verifyToken))
-                : _tokens.FirstOrDefault(t => t.IsValid(verifyToken, type));
+                : _codes.FirstOrDefault(t => t.IsValid(verifyToken, type));
         }
 
         public bool Verify(string verifyToken)
@@ -73,23 +66,20 @@ namespace Domain.User.Entities
 
         public bool ResetPassword(string newPassword, string resetToken)
         {
-            Token? token = GetToken(resetToken, TokenType.RESSET);
-            if (token is not null)
-            {
-                if (token.IsExpired()) throw new ExpiredTokenException("Verify token " + resetToken + " is expired !");
+            var token = GetToken(resetToken, TokenType.RESSET);
+            if (token is null) throw new InvalidTokenException("Verify token " + resetToken + " is invalid !");
+            if (token.IsExpired()) throw new ExpiredTokenException("Verify token " + resetToken + " is expired !");
 
-                Password = newPassword;
-                token.Active = false;
-                return true;
-            }
+            Password = newPassword;
+            token.Active = false;
+            return true;
 
-            throw new InvalidTokenException("Verify token " + resetToken + " is invalid !");
         }
 
-        public bool AddToken(string token, int age, TokenType tokenType)
+        public bool AddCode(string token, int age, TokenType tokenType)
         {
-            var t = new Token(token, age, tokenType);
-            _tokens.Add(t);
+            var t = new Code(token, age, tokenType, Id);
+            _codes.Add(t);
             return true;
         }
         
@@ -104,10 +94,112 @@ namespace Domain.User.Entities
 
         public void Update(DateOnly? birthday, string? fistName, string? lastName, string? phoneNumber)
         {
-            if(birthday is not null)Birthday = birthday;
+            if(birthday is not null) Birthday = birthday;
             if(fistName is not null && lastName is not null) Name = new Name(fistName, lastName);
             if(phoneNumber is not null) PhoneNumber = phoneNumber;
         }
 
+        public static UserBuilder builder()
+        {
+            return new UserBuilder();
+        }
+
     }
+
+
+    public class UserBuilder
+    {
+        private string _firstName;
+        private string _lastName;
+        private DateOnly _birthday;
+        private string _password;
+        private string _email;
+        private string _phoneNumber;
+        private ID _avatar;
+        private UserProvider _provider;
+        private List<Role> _roles;
+
+        internal UserBuilder()
+        {
+
+        }
+
+        public UserBuilder FirstName(string firstName)
+        {
+
+            _firstName = firstName;
+            return this;
+        }
+
+
+        public UserBuilder LastName(string lastName)
+        {
+
+            _lastName = lastName;
+            return this;
+        }
+
+
+        public UserBuilder Email(string email)
+        {
+
+            _email = email;
+            return this;
+        }
+
+
+        public UserBuilder Provider(UserProvider v)
+        {
+
+            _provider = v;
+            return this;
+        }
+
+        public UserBuilder PhoneNumber(string v)
+        {
+
+            _phoneNumber = v;
+            return this;
+        }
+
+        public UserBuilder Birthday(DateOnly dateOnly)
+        {
+            _birthday = dateOnly;
+            return this;
+        }
+
+        public UserBuilder Roles(params Role[] roles)
+        {
+            _roles = new List<Role>(roles);
+            return this;
+        }
+
+        public UserBuilder Password(string password)
+        {
+            _password = password;
+            return this;
+        }
+
+        public UserBuilder AvatarId(ID avatarId)
+        {
+            _avatar = avatarId;
+            return this;
+        }
+
+        public User build()
+        {
+            return new User(
+                new Name(_firstName, _lastName),
+                _birthday,
+                _email,
+                _phoneNumber,
+                _roles,
+                _password,
+                null,
+                _provider,
+                _avatar
+            );
+        }
+
+}
 }
