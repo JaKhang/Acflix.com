@@ -3,7 +3,9 @@ using System.Security.Claims;
 using Application.Commands;
 using Application.Models.Base;
 using Application.Models.Comment;
+using Application.Models.Episode;
 using Application.Models.Film;
+using Application.Models.Vote;
 using Application.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +14,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/films")]
     [Authorize]
     [ApiController]
-    public class FilmsController(IFilmQueries filmQueries, IFilmCommands filmCommands, ICommentQueries commentQueries) : ControllerBase
+    public class FilmsController(IFilmQueries filmQueries, IFilmCommands filmCommands, ICommentQueries commentQueries, IVoteQueries voteQueries) : ControllerBase
     {
         // GET: /api/v1/films
         [HttpGet]
@@ -46,10 +48,24 @@ namespace API.Controllers
             return await commentQueries.FindByFilmId(Guid.Parse(id), pageRequest);
         }
 
+        [HttpGet("{id}/relation")]
+        public async Task<IEnumerable<FilmResponse>> GetRelated(string filmId)
+        {
+            return await filmQueries.FindRelatedFilms(Guid.Parse(filmId));
+        }
 
+        [HttpGet("{id}/eposides")]
+        public async Task<IEnumerable<EpisodeResponse>> GetEposides(string filmId)
+        {
+            return await filmQueries.FindEpisodeByFilmId(Guid.Parse(filmId));
+        }
 
-
-
+        [HttpGet("{id}/votes")]
+        public async Task<VoteResponse> GetVote(string id)
+        {
+            var userId = Guid.NewGuid();
+            return await voteQueries.FindVoteByIdAsync(userId, Guid.Parse(id));
+        }
 
     }
 }
