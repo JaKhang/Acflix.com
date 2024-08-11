@@ -64,10 +64,7 @@ namespace Application.Queries
         /// <param name="pageRequest"></param>
         /// <returns></returns>
         Task<Page<FilmResponse>> FindNewEpisode(PageRequest pageRequest);
-
-
-
-
-
+        Task<IEnumerable<FilmResponse>> CheckSaved(Guid guid, string ids);
+        Task<IEnumerable<EpisodeResponse>> FindEpisodeByFilmId(Guid guid);
     }
 }
