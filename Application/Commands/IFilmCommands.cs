@@ -28,10 +28,7 @@ namespace Application.Commands
         /// <param name="filmId"></param>
         /// <returns></returns>
         Task Hide(Guid filmId);
-
         Task Delete(Guid filmId);
-
-
         Task<Guid> Create(FilmRequest request);
     }
 }

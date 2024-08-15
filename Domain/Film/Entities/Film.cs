@@ -38,6 +38,27 @@ namespace Domain.Film.Entities
         {
 
         }
+        
+        public Film(string name, string originalName, string language, string originalLanguage, string country, Date releaseDate,
+            Quality quality, FilmStatus status, ID directorId, ID posterId,
+            int? ageRestriction = null,
+            string? description = null
+        ) : base(new ID())
+        {
+            Name = name;
+            OriginalName = originalName;
+            Language = language;
+            OriginalLanguage = originalLanguage;
+            Country = country;
+            ReleaseDate = releaseDate;
+            Quality = quality;
+            Status = status;
+            DirectorId = directorId;
+            PosterId = posterId;
+            AgeRestriction = ageRestriction;
+            Description = description;
+            Popularity = 0;  
+        }
 
         public void AddComment(Comment commnent)
         {
@@ -51,12 +72,17 @@ namespace Domain.Film.Entities
             _comments.Remove(commnent);
         }
 
-        public void Rate(Vote rating)
+        public void AddVote(Vote rating)
         {
             ArgumentNullException.ThrowIfNull(rating);
             _votes.Add(rating);
         }
 
-
+        public void isHide()
+        {
+            
+            
+        }
+ 
     }
 }

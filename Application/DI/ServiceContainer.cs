@@ -30,6 +30,7 @@ namespace Application.DI
 
             services.AddScoped<IAuthenticationCommands, AuthenticationCommand>();
             services.AddScoped<IFilmCommands, FilmCommand>();
+            services.AddScoped<ICategoryCommands, CategoryCommands>();
             services.AddScoped<ICategoryQueries, CategoryQueries>();
             services.AddScoped<UserMapper, UserMapper>();
             services.AddScoped<ImageMapper, ImageMapper>();
