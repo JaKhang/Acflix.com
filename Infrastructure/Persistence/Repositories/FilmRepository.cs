@@ -15,4 +15,9 @@ public class FilmRepository : IFilmRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<Film> DeleteAsync(Film entity)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -7,6 +7,8 @@ namespace Domain.Film.Repositories
         Task<Entities.Film>  SaveAsync(Entities.Film entity);
 
         Task<Entities.Film> FindByIdAsync(ID id);
+        
+        Task<Entities.Film> DeleteAsync(Entities.Film entity);
 
     }
 }
