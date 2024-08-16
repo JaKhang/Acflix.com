@@ -1,5 +1,5 @@
 ﻿using Azure;
-using Domain.Actor.Enities;
+using Domain.Actor.Entities;
 using Domain.Base.ValueObjects;
 using Domain.Director;
 using Domain.Film.Entities;
@@ -82,8 +82,6 @@ namespace Infrastructure.Persistence.Config
         public void Configure(EntityTypeBuilder<Series> builder)
         {
             builder.ToTable("Series");
-
-
             builder.HasMany(s => s.Episodes).WithOne().HasForeignKey(e => e.FilmId).OnDelete(DeleteBehavior.ClientCascade);
 
                 
@@ -96,7 +94,8 @@ namespace Infrastructure.Persistence.Config
         public void Configure(EntityTypeBuilder<Movie> builder)
         {
             builder.ToTable("Movies");
-            builder.OwnsOne(m => m.Source);
+            builder.HasOne(e => e.Video).WithMany().HasForeignKey(m => m.VideoId).OnDelete(DeleteBehavior.ClientCascade);
+
         }
     }
 
@@ -106,8 +105,7 @@ namespace Infrastructure.Persistence.Config
         public void Configure(EntityTypeBuilder<Episode> builder)
         {
             builder.ToTable("Episodes");
-
-            builder.OwnsOne(e => e.Source);
+            builder.HasOne(e => e.Video).WithMany().HasForeignKey(e => e.VideoId).OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 
@@ -137,5 +135,18 @@ namespace Infrastructure.Persistence.Config
 
         }
     }
+    public class VideoConfig : IEntityTypeConfiguration<Video>
+    {
+
+        public void Configure(EntityTypeBuilder<Video> builder)
+        {
+
+            builder.ToTable("Videos");
+            builder.HasMany<Movie>().WithOne(f => f.Video).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasMany<Episode>().WithOne(e => e.Video).OnDelete(DeleteBehavior.ClientCascade);
+
+        }
+    }
+
 
 }

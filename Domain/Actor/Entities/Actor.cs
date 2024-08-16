@@ -1,7 +1,7 @@
 ﻿using Domain.Base;
 using Domain.Base.ValueObjects;
 
-namespace Domain.Actor.Enities
+namespace Domain.Actor.Entities
 {
     public class Actor : AggregateRoot
     {

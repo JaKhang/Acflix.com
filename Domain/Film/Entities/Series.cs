@@ -12,11 +12,11 @@ namespace Domain.Film.Entities
         public DateTime? LastReleasedEpisodeAt { get; protected set; }
 
 
-        public void AddEpisode(string name, string label, Source source)
+        public void AddEpisode(string name, string label, Video video)
         {
             if (Status == FilmStatus.COMPLETED) throw new BusinessException("Series film cant not add episode because film is completed !");
             int index = Episodes.Count + 1;
-            Episode episode = new(name, index, source, label is not null ? label : index.ToString(), Id);
+            Episode episode = new(name, index, video, label , Id);
             LastEpisode = index;
             LastReleasedEpisodeAt = new DateTime();
             _episodes.Add(episode);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models.Actor
 {
-    public record ActorResponse(Guid id,string name,List<ImageResponse> Images)
+    public record ActorResponse(Guid id,string name,List<VarientResponse> Images)
 
     {
     }

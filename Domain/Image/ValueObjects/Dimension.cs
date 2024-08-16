@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Image.ValueObjects
 {
-    public record Dimension(int Width, int Weight)
+    public record Dimension(int Width, int Height)
     {
     }
 }

@@ -5,7 +5,8 @@ namespace Domain.Film.Entities
 {
     public class Movie : Film
     {
-        public Source? Source {  get; set; }
+        public Video Video {  get; protected set; }
+        public ID VideoId {  get; protected set; }
 
     }
 }

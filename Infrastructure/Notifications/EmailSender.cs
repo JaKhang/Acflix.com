@@ -15,17 +15,17 @@ namespace Infrastructure.Notifications
         private readonly string _senderName = "AC Flix";          // Tên mail muốn gửi
         private readonly string _senderPassword = "";             // Mật khẩu của email gửi
 
-        public async Task SendVerify(string email, Code verificationCode)
+        public async Task SendVerify(string email, string verificationCode)
         {
             var subject = "Verify your email";
-            var body = $"This is the code to verify your email: {verificationCode.Value}";
+            var body = $"This is the code to verify your email: {verificationCode}";
             await SendEmailAsync(email, subject, body);
         }
 
-        public async Task SendResetPassword(string email, Code resetPass)
+        public async Task SendResetPassword(string email, string resetPass)
         {
             var subject = "Reset your password";
-            var body = $"This is your new password: {resetPass.Value}";
+            var body = $"This is your new password: {email}";
             await SendEmailAsync(email, subject, body);
         }
 

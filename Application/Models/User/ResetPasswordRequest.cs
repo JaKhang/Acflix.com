@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models.User
 {
-    public class ResetPasswordRequest
+    public record ResetPasswordRequest(string Code, string Email, string Password)
     {
     }
 }

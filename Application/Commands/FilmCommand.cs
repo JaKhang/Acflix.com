@@ -2,13 +2,16 @@
 using Application.Models.Comment;
 using Application.Models.Film;
 using Application.Models.Vote;
+using Application.Worker;
 using Domain.Base.ValueObjects;
 using Domain.Film.Entities;
 using Domain.Film.Repositories;
+using Infrastructure.Storage.Local;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Commands;
 
-public class FilmCommand(IFilmRepository filmRepository) : IFilmCommands {
+public class FilmCommand(IFilmRepository filmRepository, IVideoWorker videoWorker, ILocalStorage localStorage) : IFilmCommands {
 
 
     public async Task Comment(Guid filmId, Guid userId, CommentRequest request)
@@ -36,6 +39,11 @@ public class FilmCommand(IFilmRepository filmRepository) : IFilmCommands {
     }
 
     public Task<Guid> Create(FilmRequest request)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddMoveSource(Guid filmId, IFormFile file)
     {
         throw new NotImplementedException();
     }

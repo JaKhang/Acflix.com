@@ -1,4 +1,6 @@
 ﻿using Domain.Base.ValueObjects;
+using Domain.Event;
+using MediatR;
 
 namespace Domain.Base
 {
@@ -10,10 +12,30 @@ namespace Domain.Base
         public bool IsDeleted { get; protected set; }
 
 
+        private List<DomainEvent> _domainEvents;
+        public List<DomainEvent> DomainEvents => _domainEvents;
+
+        public void AddDomainEvent(DomainEvent eventItem)
+        {
+            _domainEvents = _domainEvents ?? new List<DomainEvent>();
+            _domainEvents.Add(eventItem);
+        }
+
+        public void RemoveDomainEvent(DomainEvent eventItem)
+        {
+            _domainEvents?.Remove(eventItem);
+        }
 
         protected Entity(ID id)
         {
             Id = id;
+            CreatedAt = DateTime.Now;
+            LastUpdatedAt = DateTime.Now;
+        }
+
+        protected Entity()
+        {
+
         }
 
 
@@ -52,6 +74,11 @@ namespace Domain.Base
         public static bool operator !=(Entity? left, Entity? right)
         {
             return !(left == right);
+        }
+
+        public void ClearDomainEvents()
+        {
+            _domainEvents.Clear();
         }
     }
 }

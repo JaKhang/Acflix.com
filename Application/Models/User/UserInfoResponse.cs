@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.Models.User
 {
-    public class UserInfoResponse
+    public record UserInfoResponse(string Name, string Email, IEnumerable<string> Roles, bool Verified)
     {
     }
 }

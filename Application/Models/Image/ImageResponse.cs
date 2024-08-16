@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Base.ValueObjects;
 
-namespace Application.Models.Image
+namespace Application.Models.Image;
+
+public record ImageResponse(IEnumerable<VarientResponse> Variants, ID Id, string Name)
 {
-    public record ImageResponse
-        (
-        string Url,
-        int Width,
-        int Height
-        )
-    {
-    }
+    
 }

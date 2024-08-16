@@ -11,11 +11,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Domain.Caterory;
+using Domain.Event;
 using Domain.User.Entities;
+using Infrastructure.Persistence.Config;
+using Infrastructure.Persistence.Interceptors;
 
-namespace Infrastructure.Persistence.Config
+namespace Infrastructure.Persistence
 {
     public class DatabaseContext : DbContext
     {
@@ -23,8 +25,9 @@ namespace Infrastructure.Persistence.Config
         public DbSet<Category> Categories { get; set; }
         public DbSet<Image> Images { get; set; }
 
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options): base(options)
         {
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +44,8 @@ namespace Infrastructure.Persistence.Config
             modelBuilder.ApplyConfiguration(new VariantConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
             modelBuilder.ApplyConfiguration(new CodeConfig());
+            // modelBuilder.ApplyConfiguration(new VideoConfig());
+            modelBuilder.Ignore<List<DomainEvent>>();
 
 
 
@@ -50,10 +55,13 @@ namespace Infrastructure.Persistence.Config
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {
             builder.Properties<ID>().HaveConversion<IDConverter>();
-
-
         }
 
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // optionsBuilder.
+            //     AddInterceptors(domainEventsInterceptor);
+            base.OnConfiguring(optionsBuilder);
+        }
     }
 }

@@ -12,6 +12,18 @@ services:
     ports: 
       - "1433:1433"
     volumes:
-      - ./database/data:/var/opt/mssql/data
-      - ./database/log:/var/opt/mssql/log
-      - ./database/secrets:/var/opt/mssql/secrets
+      - ./volumes/database/data:/var/opt/mssql/data
+      - ./volumes/database/log:/var/opt/mssql/log
+      - ./volumes/database/secrets:/var/opt/mssql/secrets
+  minio:
+    image: minio/minio
+    container_name: minio-acflix
+    ports:
+        - 9000:9000
+        - 9001:9001
+    volumes:
+        - ./volumes/storage:/data
+    environment:
+        MINIO_ROOT_USER: acflixminio
+        MINIO_ROOT_PASSWORD: acflixminio  
+    command: server --console-address ":9001" /data

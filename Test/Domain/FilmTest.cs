@@ -12,7 +12,7 @@ namespace Test.Domain
         [Fact]
         void Test()
         {
-            output.WriteLine(BCrypt.Net.BCrypt.HashPassword("admin"));
+            output.WriteLine(Path.Join("D:\\Workspace\\.NET\\Acflix\\volumes\\tmp", "image.jpg"));
         }
     }
 }

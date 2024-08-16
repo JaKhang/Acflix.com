@@ -20,10 +20,9 @@ namespace Application.Commands
         /// <summary>
         /// Create code save code and send mail
         /// </summary>
-        /// <param name="email"></param>
         /// <param name="request"></param>
         /// <returns></returns>
-        Task ResetPassword(string email, ResetPasswordRequest request);
+        Task ResetPassword(ResetPasswordRequest request);
 
 
         //tạo code => lưu csld => gửi mail

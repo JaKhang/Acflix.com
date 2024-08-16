@@ -4,10 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Models.User
-{
-    public record AuthResponse(string RefreshToken, string AccessToken)
-    {
+namespace Application.Models.User;
 
-    }
-}
+public record AuthResponse(string RefreshToken, string AccessToken);

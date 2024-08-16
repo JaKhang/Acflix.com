@@ -19,7 +19,7 @@ public class AuthenticationCommand(IUserRepository userRepository, IEmailSender 
         user = await userRepository.SaveAsync(user);
     }
 
-    public Task ResetPassword(string email, ResetPasswordRequest request)
+    public Task ResetPassword(ResetPasswordRequest request)
     {
         throw new NotImplementedException();
     }

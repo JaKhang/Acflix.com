@@ -1,4 +1,5 @@
 ﻿
+using System.Security.Authentication;
 using System.Security.Claims;
 using Application.Commands;
 using Application.Models.User;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using RegisterRequest = Application.Models.User.RegisterRequest;
+using ResetPasswordRequest = Application.Models.User.ResetPasswordRequest;
 
 namespace API.Controllers
 {
@@ -21,23 +23,62 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<Guid> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            return await authCommands.Register(request);
+            var id = await authCommands.Register(request);
+            return new CreatedResult("", id);
+        }
+
+        [HttpGet("reset-password")]
+        [Authorize]
+        public async Task<IActionResult> ResetPassword(string email)
+        {
+            await authCommands.RequestResetPasswordCode(email);
+            return new AcceptedResult();
+        }
+
+        [HttpPut("reset-password")]
+        [Authorize]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var userPrincipal = HttpContext.User;
+            var email = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
+            if (email is null)
+            {
+                throw new AuthenticationException("Email not exist in jwt");
+            }
+            await  authCommands.ResetPassword(request);
+            return new NoContentResult();
         }
 
         [HttpGet("verify")]
-        public Task Verify()
+        [Authorize]
+        public async Task<IActionResult> Verify()
         {
-            var email = string.Empty;
-            return  authCommands.RequestResetPasswordCode(email);
+            var userPrincipal = HttpContext.User;
+            var email = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
+            if (email is null)
+            {
+                throw new AuthenticationException("Email not exist in jwt");
+            }
+            await authCommands.RequestVerifyCode(email);
+            return new AcceptedResult();
         }
 
-        [HttpPost("authenticate")]
-        public async Task<AuthResponse> Register([FromBody] AuthRequest request)
+        [HttpPut("verify")]
+        [Authorize]
+        public async Task<IActionResult> Verify([FromBody] VerifyRequest verifyRequest)
         {
-            return await authCommands.Authenticate(request);
+            var userPrincipal = HttpContext.User;
+            var email = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
+            if (email is null)
+            {
+                throw new AuthenticationException("Email not exist in jwt");
+            }
+            await  authCommands.Verify(email, verifyRequest.Code);
+            return new NoContentResult();
         }
+
 
         [HttpGet("test")]
         [Authorize(Roles = "ADMIN")]
@@ -47,7 +88,6 @@ namespace API.Controllers
             var userId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var s = userPrincipal.FindFirst(ClaimTypes.Email)?.Value;
-
             return userId;
         }
 

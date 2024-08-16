@@ -5,8 +5,12 @@ namespace Application.Mappers;
 
 public class ImageMapper
 {
-    public List<ImageResponse> map(Image image)
+    private const string ImageUrl = "http://localhost:9000/image/";
+
+    public ImageResponse map(Image image)
     {
-        throw new NotImplementedException();
+        var variants = image.Variants.Select(v => new VarientResponse(ImageUrl + v.Reference, v.Dimension.Width, v.Dimension.Height));
+
+        return new ImageResponse(variants, image.Id, image.Name);
     }
 }

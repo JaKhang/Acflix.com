@@ -26,6 +26,12 @@ namespace Domain.Image.Entities
             _variants.Add(variant);
         }
 
+
+        public void AddVariants(string reference, int width, int height)
+        {
+           AddVariants(reference, new Dimension(width, height));
+        }
+
         public IReadOnlyList<Variant> Variants => _variants;
 
 

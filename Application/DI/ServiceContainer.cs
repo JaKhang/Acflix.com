@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Commands;
+using Application.Commands.Impl;
 using Application.Mappers;
 using Application.Queries;
+using Application.Worker;
 using Domain.User.Repositories;
 using Infrastructure.Authentication.Config;
 using Infrastructure.Persistence.Config;
@@ -33,6 +35,12 @@ namespace Application.DI
             services.AddScoped<ICategoryQueries, CategoryQueries>();
             services.AddScoped<UserMapper, UserMapper>();
             services.AddScoped<ImageMapper, ImageMapper>();
+            services.AddScoped<IImageCommands, ImageCommands>();
+            services.AddScoped<IImageQueries, ImageQueries>();
+            services.AddScoped<IImageWorker, ImageW>();
+            services.AddScoped<IVideoWorker, VideoWorker>();
+
+
             return services;
         }
     }

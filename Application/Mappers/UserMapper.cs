@@ -13,7 +13,7 @@ public class UserMapper
             .LastName(request.LastName)
             .Email(request.LastName)
             .Password(BCrypt.Net.BCrypt.HashPassword(request.Password))
-            .Birthday(request.Birthday)
+            .Birthday(request.DateOfBirth)
             .PhoneNumber(request.PhoneNumber)
             .Provider(UserProvider.ACFLIX)
             .Roles(Role.USER)

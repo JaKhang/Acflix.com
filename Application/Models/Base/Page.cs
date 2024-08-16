@@ -10,12 +10,11 @@ namespace Application.Models.Base
     public record Page<T>
         (
         int TotalItems,
-        List<T> Items,
+        IEnumerable<T> Items,
         bool IsFirst,
         bool IsLast,
-        int Current,
         int Limit,
-        int TotalPage
+        int Offset
         )
     {
     }

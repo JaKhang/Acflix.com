@@ -3,7 +3,6 @@ using Application.Models.Base;
 using Application.Models.Category;
 using Application.Models.Film;
 using Application.Queries;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -26,6 +25,7 @@ namespace API.Controllers
         {
             return await _categoryQueries.FindFilmsById(Guid.Parse(id), new PageRequest(offset, limit, sort));
         }
+
 
     }
 }
