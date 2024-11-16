@@ -9,9 +9,9 @@ namespace Infrastructure.Notifications
 {
     public class EmailSender : IEmailSender
     {
-        private readonly string _smtpServer = "smtp.gmail.com";
-        private readonly int _smtpPort = 587;
-        private readonly string _senderEmail = "123@gmail.com";   // Email gửi
+        private readonly string _smtpServer = "localhost";
+        private readonly int _smtpPort = 1025;
+        private readonly string _senderEmail = "acflix@acflix.com";   // Email gửi
         private readonly string _senderName = "AC Flix";          // Tên mail muốn gửi
         private readonly string _senderPassword = "";             // Mật khẩu của email gửi
 

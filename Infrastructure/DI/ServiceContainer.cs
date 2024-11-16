@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain.Director;
 using Domain.Film.Repositories;
 using Domain.Image.Repositories;
 using Domain.User.Repositories;
@@ -71,7 +72,7 @@ namespace Infrastructure.DI
             services.AddScoped<ILocalStorage, LocalStorage>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IVideoProcessor, VideoProcessor>();
-
+            services.AddScoped<IDirectorRepository, DirectorRepository>();
             return services;
         }
     }

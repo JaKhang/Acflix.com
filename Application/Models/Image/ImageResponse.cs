@@ -2,7 +2,7 @@
 
 namespace Application.Models.Image;
 
-public record ImageResponse(IEnumerable<VarientResponse> Variants, ID Id, string Name)
+public record ImageResponse(IEnumerable<VarientResponse> Variants, Guid Id, string Name)
 {
     
 }

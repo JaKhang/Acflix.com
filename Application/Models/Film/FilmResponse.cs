@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Models.Base;
 
 namespace Application.Models.Film
 {
@@ -12,23 +13,26 @@ namespace Application.Models.Film
         (
             Guid Id,
             string Name,
-            string OriginnalName,
+            string OriginalName,
             string Description,
             List<string> Genres,
             string Director,
-            List<ActorResponse> Actors,
+            List<SimpleObjectResponse> Actors,
             string Country,
             int Duration,
             string ReleaseDate,
             string ReleaseDatePrecision,
             string Type,
             int Restriction,
-            List<VarientResponse> Poster,
-            List<VarientResponse> Cover,
+            IEnumerable<VarientResponse> Poster,
+            IEnumerable<VarientResponse> Cover,
             string Status,
             string Language,
-            int Episodes,
-            int LastEpisodes
+            int? Episodes,
+            int? LastEpisodes,
+            int? CurrentEpisodes,
+            string OriginalLanguage
+
         )
     {
     }

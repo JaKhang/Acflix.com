@@ -6,8 +6,8 @@ namespace Application.Worker;
 
 public interface IVideoWorker
 {
-        Task DoWork(ID id, string file);
+        Task DoWork(Id id, string file);
 
-        Task DoForEpisode(ID episodeId, string file);
+        Task DoForEpisode(Id episodeId, string file);
 
 }

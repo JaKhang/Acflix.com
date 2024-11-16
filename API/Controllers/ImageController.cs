@@ -1,7 +1,9 @@
 ﻿using Application.Commands;
+using Application.Commands.Images;
 using Application.Models.Base;
 using Application.Models.Image;
 using Application.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -9,12 +11,12 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]s")]
-public class ImageController(IImageCommands imageCommands, IImageQueries imageQueries) : ControllerBase
+public class ImageController(ISender sender, IImageQueries imageQueries) : ControllerBase
 {
     [HttpPost]
-    public async Task<Guid> UploadImage(IFormFile image)
+    public async Task<Guid> UploadImage(IFormFile image, bool resize = true)
     {
-        return await imageCommands.UploadImage(image, true);
+        return await sender.Send(new UploadImageCommand(image, resize));
     }
 
     [HttpGet("page")]

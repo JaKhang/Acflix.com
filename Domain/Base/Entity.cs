@@ -6,7 +6,7 @@ namespace Domain.Base
 {
     public abstract class Entity : IEquatable<Entity?>
     {
-        public ID Id { get; protected set; }
+        public Id Id { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
         public DateTime LastUpdatedAt { get; protected set; }
         public bool IsDeleted { get; protected set; }
@@ -26,7 +26,7 @@ namespace Domain.Base
             _domainEvents?.Remove(eventItem);
         }
 
-        protected Entity(ID id)
+        protected Entity(Id id)
         {
             Id = id;
             CreatedAt = DateTime.Now;
@@ -58,7 +58,7 @@ namespace Domain.Base
         public bool Equals(Entity? other)
         {
             return other is not null &&
-                   EqualityComparer<ID>.Default.Equals(Id, other.Id);
+                   EqualityComparer<Id>.Default.Equals(Id, other.Id);
         }
 
         public override int GetHashCode()

@@ -1,9 +1,9 @@
 ﻿
 namespace Domain.Base.ValueObjects
 {
-    public record ID(Guid Value)
+    public record Id(Guid Value)
     {
-        public ID(): this(Guid.NewGuid())
+        public Id(): this(Guid.NewGuid())
         {
         }
     }

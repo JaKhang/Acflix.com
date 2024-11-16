@@ -12,7 +12,7 @@ namespace Infrastructure.Authentication
     public class Principal : IPrincipal
     {
         public string Email { get; private set; }
-        public ID Id{ get; private set; }
+        public Id Id{ get; private set; }
 
 
         private readonly List<Role> _roles; 

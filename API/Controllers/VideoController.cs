@@ -21,7 +21,7 @@ public class VideoController(IVideoWorker iVideoWorker, ILocalStorage localStora
         var originalFile = Path.Join(tmpDir, video.FileName);
         Directory.CreateDirectory(tmpDir);
         await localStorage.Storage(video, originalFile);
-        var task = iVideoWorker.DoWork(new ID(Guid.NewGuid()), originalFile);
+        var task = iVideoWorker.DoWork(new Id(Guid.NewGuid()), originalFile);
         return new AcceptedResult();
     }
 }

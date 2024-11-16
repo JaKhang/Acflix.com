@@ -18,18 +18,18 @@ namespace Domain.User.Entities
         public DateTime? VerifiedAt { get; protected set; }
         public UserProvider Provider { get; protected set; }
         public bool IsEnabled { get; protected set; }
-        public ID? AvatarId { get; protected set; }
+        public Id? AvatarId { get; protected set; }
         public string RefreshToken { get; protected set; } = string.Empty;
         private readonly List<Code> _codes = [];
-        public virtual ISet<ID> SavedFilms { get; protected set; } = new HashSet<ID>();
-        public virtual ISet<ID> Histories { get; protected set; } = new HashSet<ID>();
+        public virtual ISet<Id> SavedFilms { get; protected set; } = new HashSet<Id>();
+        public virtual ISet<Id> Histories { get; protected set; } = new HashSet<Id>();
         public virtual IReadOnlyList<Code> Codes => _codes;
 
-        public User() : base(new ID())
+        public User() : base(new Id())
         {
         }
 
-        public User(Name name, DateOnly birthday, string email, string phoneNumber, List<Role> roles, string password, DateTime? verifiedAt, UserProvider provider, ID? avatarId) : base(new ID())
+        public User(Name name, DateOnly birthday, string email, string phoneNumber, List<Role> roles, string password, DateTime? verifiedAt, UserProvider provider, Id? avatarId) : base(new Id())
         {
             Name = name;
             Birthday = birthday;
@@ -51,7 +51,7 @@ namespace Domain.User.Entities
 
         public bool Verify(string verifyToken)
         {
-            if (VerifiedAt is null)
+            if (VerifiedAt is not null)
                 return false;
 
             var token = GetToken(verifyToken, TokenType.VERIFY);
@@ -83,7 +83,7 @@ namespace Domain.User.Entities
             return true;
         }
         
-        public void ChangeAvatar(ID avatarId)
+        public void ChangeAvatar(Id avatarId)
         {
             AvatarId = avatarId;
         }
@@ -115,7 +115,7 @@ namespace Domain.User.Entities
         private string _password;
         private string _email;
         private string _phoneNumber;
-        private ID _avatar;
+        private Id _avatar;
         private UserProvider _provider;
         private List<Role> _roles;
 
@@ -180,7 +180,7 @@ namespace Domain.User.Entities
             return this;
         }
 
-        public UserBuilder AvatarId(ID avatarId)
+        public UserBuilder AvatarId(Id avatarId)
         {
             _avatar = avatarId;
             return this;

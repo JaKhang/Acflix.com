@@ -10,21 +10,26 @@ namespace Domain.Film.Entities
         public int Index { get; protected set; }
         public Video Video {  get; set; }
         public string Label { get; protected set; }
-        public ID FilmId { get; protected set; }
-        public ID VideoId {  get; protected set; }
+        public Id FilmId { get; protected set; }
+        public Id VideoId {  get; protected set; }
 
         public Episode() : base(new())
         {
 
         }
 
-        public Episode(string name, int index, Video video, string label, ID filmId) : base(new())
+        public Episode(string name, int index, string label, Id filmId) : base(new())
         {
             Name = name;
             Index = index;
-            Video = video;
             Label = label;
             FilmId = filmId;
+        }
+
+        public void AddVideo(Video video)
+        {
+            Video = video;
+            VideoId = video.Id;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Application.Models.Comment
         (
         string Content,
         SimpleUserResponse User,
-        int CreatedAt
+        string CreatedAt
         )
     {
     }

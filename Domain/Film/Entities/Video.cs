@@ -1,4 +1,5 @@
 ﻿using Domain.Base;
+using Domain.Base.ValueObjects;
 
 namespace Domain.Film.Entities;
 
@@ -8,7 +9,7 @@ public class Video : Entity
     {
     }
 
-    public Video(long duration, int quality, bool precess, string reference)
+    public Video(long duration, int quality, bool precess, string reference) : base(new Id())
     {
         Duration = duration;
         Quality = quality;

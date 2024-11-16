@@ -9,7 +9,7 @@ public interface IImageRepository
     Task UpdateAsync(Entities.Image image);
 
 
-    Task Delete(ID id);
+    Task Delete(Id id);
 
-    Task<Entities.Image?> FindByIdAsync(ID id);
+    Task<Entities.Image?> FindByIdAsync(Id id);
 }

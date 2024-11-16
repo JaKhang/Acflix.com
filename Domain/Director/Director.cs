@@ -9,8 +9,12 @@ namespace Domain.Director
         {
         }
 
+        public Director(string name) : base(new())
+        {
+            Name = name;
+        }
 
 
-        public string Name { get; }
+        public string Name { get; protected set; }
     }
 }

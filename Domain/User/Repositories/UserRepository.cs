@@ -14,7 +14,7 @@ namespace Domain.User.Repositories
 
         Code Save(Code code);
 
-        Task<Entities.User> FindByIdAsync(ID id);
+        Task<Entities.User> FindByIdAsync(Id id);
 
         Task<Entities.User?> FindByEmailAsync(string email);
 

@@ -19,11 +19,16 @@ builder.Services.AddMinio(configureClient => configureClient
         .WithSSL(false)
         .Build()
 );
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = long.MaxValue; // Unlimited size
 });
-builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = long.MaxValue); // Allows for even larger files
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = long.MaxValue;
+    options.ListenAnyIP(8080);
+});
 
 builder.Services.AddHangfire(cf =>
     cf.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
@@ -35,7 +40,18 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("AllowAll",
+        ob =>
+        {
+            ob.AllowAnyOrigin() // Specify your client's URL
+                .AllowAnyMethod()
+                .AllowAnyHeader();
 
+        });
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -48,7 +64,7 @@ app.UseHangfireDashboard();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseCors("AllowAll");
 app.MapControllers();
 
 app.Run();

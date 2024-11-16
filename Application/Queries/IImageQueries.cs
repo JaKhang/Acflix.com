@@ -7,7 +7,7 @@ namespace Application.Queries;
 
 public interface IImageQueries
 {
-    Task<IEnumerable<ImageResponse>> FindByIds(IEnumerable<ID> ids);
+    Task<IEnumerable<ImageResponse>> FindByIds(IEnumerable<Id> ids);
 
     Task<Page<ImageResponse>> FindPage(PageRequest pageRequest);
 

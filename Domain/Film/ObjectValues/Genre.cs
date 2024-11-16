@@ -13,7 +13,7 @@ namespace
         public static readonly Genre DOCUMENTARY = new(6, "documentary");
         public static readonly Genre DRAMA = new(7, "drama");
         public static readonly Genre FAMILY = new(8, "family");
-        public static readonly Genre FANTACY = new(9, "fantacy");
+        public static readonly Genre FANTASY = new(9, "fantasy");
         public static readonly Genre HISTORY = new(10, "history");
         public static readonly Genre HORROR = new(11, "horror");
         public static readonly Genre MUSICAL = new(12, "musical");

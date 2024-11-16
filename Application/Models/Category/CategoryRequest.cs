@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace Application.Models.Category
 {
-    public class CategoryRequest
-    {
-    }
+    public record CategoryRequest(IEnumerable<Guid> FilmsIds, string Name, Guid CoverId, int Popularity);
 }

@@ -17,20 +17,22 @@ namespace Domain.Film.Entities
         public Date ReleaseDate { get; protected set; }
         public Quality Quality { get; protected set; }
         public FilmStatus Status { get; protected set; }
-        public ID DirectorId { get; protected set; }
-        public ID PosterId { get; protected set; }
+        public Id DirectorId { get; protected set; }
+        public Id PosterId { get; protected set; }
+        public Id? CoverId { get; protected set; }
+        public int Duration { get; protected set; }
 
-        private readonly List<Genre> _genres  = [];
-        private readonly List<ID> _relatedFilmIds  = [];
+        private readonly List<Genre> _genres  ;
+        private readonly List<Id> _relatedFilmIds  ;
         private readonly List<Comment> _comments = [];
         private readonly List<Vote> _votes = [];
-        private readonly List<ID> _actorIds = [];
+        private readonly List<Id> _actorIds;
 
         //getter
-        public IReadOnlyList<ID> ActorIds => _actorIds;
+        public IReadOnlyList<Id> ActorIds => _actorIds;
         public IReadOnlyList<Vote> Votes => _votes;
         public IReadOnlyList<Comment> Comments => _comments;
-        public IReadOnlyList<ID> RelatedFilmIds => _relatedFilmIds;
+        public IReadOnlyList<Id> RelatedFilmIds => _relatedFilmIds;
         public IReadOnlyList<Genre> Genres => _genres;
 
 
@@ -39,10 +41,32 @@ namespace Domain.Film.Entities
 
         }
 
-        public void AddComment(Comment commnent)
+        protected Film(Id id, List<Genre> genres, List<Id> relatedFilmIds, List<Id> actorIds, string name, string? description, string originalName, string language, string originalLanguage, int? ageRestriction, string country, int popularity, Date releaseDate, Quality quality, FilmStatus status, Id directorId, Id posterId, int duration, Id coverId) : base(id)
         {
-            ArgumentNullException.ThrowIfNull(commnent);
-            _comments.Add(commnent);
+            _genres = genres;
+            _relatedFilmIds = relatedFilmIds;
+            _actorIds = actorIds;
+            Name = name;
+            Description = description;
+            OriginalName = originalName;
+            Language = language;
+            OriginalLanguage = originalLanguage;
+            AgeRestriction = ageRestriction;
+            Country = country;
+            Popularity = popularity;
+            ReleaseDate = releaseDate;
+            Quality = quality;
+            Status = status;
+            DirectorId = directorId;
+            PosterId = posterId;
+            Duration = duration;
+            CoverId = coverId;
+        }
+
+        public void AddComment(string content, Guid userId)
+        {
+            var comment = new Comment(content, new Id(userId), this.Id);
+            _comments.Add(comment);
         }
 
         public void RemoveComment(Comment commnent)
@@ -58,5 +82,9 @@ namespace Domain.Film.Entities
         }
 
 
+        public void AddRelatedFilm(IEnumerable<Id> select)
+        {
+            _relatedFilmIds.AddRange((select));
+        }
     }
 }

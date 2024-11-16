@@ -24,7 +24,7 @@ public sealed class JwtProvider : IJwtProvider
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         var userClaims = user.Roles.Select(role => new Claim(ClaimTypes.Role, role.Name)).ToList();
         userClaims.Add(new Claim(ClaimTypes.Email, user.Email));
-        userClaims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
+        userClaims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.Value.ToString()));
 
         var token = new JwtSecurityToken(
                 issuer: _properties.Issuer,

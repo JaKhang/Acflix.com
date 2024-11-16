@@ -11,7 +11,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using Domain.Caterory;
+using Domain.Actor.Entities;
+using Domain.Category;
+using Domain.Director;
 using Domain.Event;
 using Domain.User.Entities;
 using Infrastructure.Persistence.Config;
@@ -24,6 +26,16 @@ namespace Infrastructure.Persistence
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<Film> Films { get; set; }
+        public DbSet<Director> Directors { get; set; }
+        public DbSet<Actor> Actors { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Series> Series { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Vote> Votes { get; set; }
+        public DbSet<Episode> Episodes { get; set; }
+
+
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options): base(options)
         {
@@ -44,6 +56,7 @@ namespace Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new VariantConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
             modelBuilder.ApplyConfiguration(new CodeConfig());
+            modelBuilder.ApplyConfiguration(new ActorConfig());
             // modelBuilder.ApplyConfiguration(new VideoConfig());
             modelBuilder.Ignore<List<DomainEvent>>();
 
@@ -54,7 +67,7 @@ namespace Infrastructure.Persistence
 
         protected override void ConfigureConventions(ModelConfigurationBuilder builder)
         {
-            builder.Properties<ID>().HaveConversion<IDConverter>();
+            builder.Properties<Id>().HaveConversion<IDConverter>();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

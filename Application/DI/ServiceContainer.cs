@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Commands;
-using Application.Commands.Impl;
+using Application.Commands.Directors;
+using Application.Factories;
 using Application.Mappers;
 using Application.Queries;
 using Application.Worker;
@@ -30,14 +31,14 @@ namespace Application.DI
         {
 
 
-            services.AddScoped<IAuthenticationCommands, AuthenticationCommand>();
-            services.AddScoped<IFilmCommands, FilmCommand>();
+
+            services.AddScoped<IDbConnectionFactory, SqlServerConnectionFactory>();
             services.AddScoped<ICategoryQueries, CategoryQueries>();
-            services.AddScoped<UserMapper, UserMapper>();
-            services.AddScoped<ImageMapper, ImageMapper>();
-            services.AddScoped<IImageCommands, ImageCommands>();
+            services.AddScoped<UserMapper>();
+            services.AddScoped<ImageMapper>();
+            services.AddScoped<FilmMapper>();
             services.AddScoped<IImageQueries, ImageQueries>();
-            services.AddScoped<IImageWorker, ImageW>();
+            services.AddScoped<IImageWorker, ImageWorker>();
             services.AddScoped<IVideoWorker, VideoWorker>();
 
 

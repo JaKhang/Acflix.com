@@ -2,7 +2,9 @@
 using System.Security.Authentication;
 using System.Security.Claims;
 using Application.Commands;
+using Application.Commands.Authentication;
 using Application.Models.User;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
@@ -14,18 +16,18 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthenticationCommands authCommands) : ControllerBase
+    public class AuthController(ISender sender) : ControllerBase
     {
         [HttpPost]
         public async Task<AuthResponse> Authenticate([FromBody] AuthRequest request)
         {
-            return await authCommands.Authenticate(request);
+            return await sender.Send(new AuthenticateCommand(request.Email, request.Password));
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var id = await authCommands.Register(request);
+            var id = await sender.Send(new RegisterCommand(request));
             return new CreatedResult("", id);
         }
 
@@ -33,7 +35,7 @@ namespace API.Controllers
         [Authorize]
         public async Task<IActionResult> ResetPassword(string email)
         {
-            await authCommands.RequestResetPasswordCode(email);
+            await sender.Send(new RequestResetPasswordCommand(email));
             return new AcceptedResult();
         }
 
@@ -47,7 +49,7 @@ namespace API.Controllers
             {
                 throw new AuthenticationException("Email not exist in jwt");
             }
-            await  authCommands.ResetPassword(request);
+            await sender.Send(new ResetPasswordCommand(email, request.Password, request.Code));
             return new NoContentResult();
         }
 
@@ -61,7 +63,8 @@ namespace API.Controllers
             {
                 throw new AuthenticationException("Email not exist in jwt");
             }
-            await authCommands.RequestVerifyCode(email);
+
+            await sender.Send(new RequestVerifyCommand(email));
             return new AcceptedResult();
         }
 
@@ -75,7 +78,8 @@ namespace API.Controllers
             {
                 throw new AuthenticationException("Email not exist in jwt");
             }
-            await  authCommands.Verify(email, verifyRequest.Code);
+
+            await sender.Send(new VerifyCommand(verifyRequest.Code, email));
             return new NoContentResult();
         }
 

@@ -12,12 +12,12 @@ namespace Domain.User.Entities
     public class Code : Entity
 
     {
-        public Code(ID userId) : base(new ID())
+        public Code(Id userId) : base(new Id())
         {
             UserId = userId;
         }
 
-        public Code(string value, int age, TokenType type, ID userId) : base(new ID())
+        public Code(string value, int age, TokenType type, Id userId) : base(new Id())
         {
             Value = value;
             CreatedAt = DateTime.Now;
@@ -31,7 +31,7 @@ namespace Domain.User.Entities
         public int Age { get; internal set; }
         public bool Active { get; internal set; }
         public TokenType Type { get; internal set; }
-        public ID UserId { get; internal set; }
+        public Id UserId { get; internal set; }
 
         public bool IsValid(string code, TokenType tokenType)
         {

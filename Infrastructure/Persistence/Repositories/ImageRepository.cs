@@ -21,12 +21,12 @@ public class ImageRepository(DatabaseContext databaseContext) : IImageRepository
         await databaseContext.SaveChangesAsync();
     }
 
-    public Task Delete(ID id)
+    public Task Delete(Id id)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Image?> FindByIdAsync(ID id)
+    public async Task<Image?> FindByIdAsync(Id id)
     {
         return await databaseContext.Images.FindAsync(id);
     }

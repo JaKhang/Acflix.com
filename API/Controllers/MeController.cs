@@ -4,7 +4,10 @@ using System.Security.Claims;
 using Application.Commands;
 using Application.Models.Base;
 using Application.Models.Film;
+using Application.Models.User;
 using Application.Queries;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,28 +16,25 @@ namespace API.Controllers
 {
     [Route("api/me")]
     [ApiController]
-    public class MeController : ControllerBase
+    [Authorize]
+    public class MeController(ISender sender) : ControllerBase
     {
 
-        private readonly IFilmQueries _filmQueries;
-        private readonly IUserCommands _userCommands;
-        private readonly IUserQueries userQueries;
 
-        [HttpGet("films")]
-        public async Task<Page<FilmResponse>> GetSavedFilms(int offset =0, int limit=20, string sort = "")
+
+        [HttpGet("")]
+        public async Task<UserProfileResponse> GetInfo()
         {
             var userPrincipal = HttpContext.User;
             var userId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return await _filmQueries.FindUserSaved(Guid.Parse(userId), new PageRequest(offset, limit, sort));
+            return await sender.Send(new UserProfileQuery(Guid.Parse(userId)));
         }
 
-        [HttpGet("films/{contains}")]
-        public async Task<IEnumerable<FilmResponse>> GetFilms(string ids)
-        {
-            var userPrincipal = HttpContext.User;
-            var userId = userPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return await _filmQueries.CheckSaved(Guid.Parse(userId), ids);
-        }
+
+
+
+
+
 
         // [HttpDelete("films")]
         // public async Task DeleteSavedFilms(ISet<Guid> ids)

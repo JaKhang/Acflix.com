@@ -15,6 +15,8 @@ services:
       - ./volumes/database/data:/var/opt/mssql/data
       - ./volumes/database/log:/var/opt/mssql/log
       - ./volumes/database/secrets:/var/opt/mssql/secrets
+    networks:
+      - acflix-net
   minio:
     image: minio/minio
     container_name: minio-acflix
@@ -27,3 +29,15 @@ services:
         MINIO_ROOT_USER: acflixminio
         MINIO_ROOT_PASSWORD: acflixminio  
     command: server --console-address ":9001" /data
+    networks:
+      - acflix-net
+  mail-dev:
+    container_name: mail-dev
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025
+
+networks:
+  acflix-net:
+    driver: host

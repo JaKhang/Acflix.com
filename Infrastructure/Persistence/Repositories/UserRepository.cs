@@ -10,9 +10,19 @@ public class UserRepository(DatabaseContext context) : IUserRepository
 {
 
 
-    public Task<User> SaveAsync(User user)
+    public async Task<User> SaveAsync(User user)
     {
-        throw new NotImplementedException();
+        if (await context.Users.ContainsAsync(user))
+        {
+            user = context.Users.Update(user).Entity;
+        }
+        else
+        {
+           user = context.Users.Add(user).Entity;
+        }
+
+        _ = await context.SaveChangesAsync();
+        return user;
     }
 
     public Code Save(Code code)
@@ -21,7 +31,7 @@ public class UserRepository(DatabaseContext context) : IUserRepository
 
     }
 
-    public Task<User> FindByIdAsync(ID id)
+    public Task<User> FindByIdAsync(Id id)
     {
         throw new NotImplementedException();
     }
@@ -34,8 +44,9 @@ public class UserRepository(DatabaseContext context) : IUserRepository
             .FirstOrDefaultAsync();
     }
 
-    public Task<bool> ExistByEmail(string email)
+    public async Task<bool> ExistByEmail(string email)
     {
-        throw new NotImplementedException();
+        var count = await context.Users.Where(u => u.Email == email).CountAsync();
+        return count > 0;
     }
 }

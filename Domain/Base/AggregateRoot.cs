@@ -4,7 +4,7 @@ namespace Domain.Base
 {
     public abstract class AggregateRoot : Entity
     {
-        protected AggregateRoot(ID id) : base(id)
+        protected AggregateRoot(Id id) : base(id)
         {
         }
     }

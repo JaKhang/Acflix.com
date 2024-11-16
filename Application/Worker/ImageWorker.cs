@@ -14,7 +14,7 @@ public class ImageWorker(
     ILogger<ImageWorker> logger,
     IServiceScopeFactory serviceScopeFactory) : IImageWorker
 {
-    public async Task DoWork(ID id, IFormFile file, bool resize)
+    public async Task DoWork(Id id, IFormFile file, bool resize)
     {
         using var scope = serviceScopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
@@ -31,7 +31,7 @@ public class ImageWorker(
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task DoWork(ID id, string file, bool resize)
+    public async Task DoWork(Id id, string file, bool resize)
     {
         using var scope = serviceScopeFactory.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();

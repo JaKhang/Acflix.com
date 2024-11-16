@@ -37,7 +37,7 @@ public class ImageProcessor(IMinioClient minioClient, ImageProperties imagePrope
             var newDimension = getNewDemDimension(width, originalDimension);
             var conversion = FFmpeg.Conversions.New()
                 .AddParameter($"-i {originalFile}") // Input file
-                .AddParameter($"-vf scale={width}:{newDimension.Height}") // Scaling filter
+                .AddParameter($"-vf scale={newDimension.Width}:{newDimension.Height}") // Scaling filter
                 .SetOutput(dest);
             var rs = await conversion.Start();
 
@@ -66,6 +66,14 @@ public class ImageProcessor(IMinioClient minioClient, ImageProperties imagePrope
 
     private Dimension getNewDemDimension(int width, Dimension dimension)
     {
-        return new Dimension(width, (dimension.Height * width) / dimension.Width);
-    }
+        if (dimension.Width > dimension.Height)
+            return new Dimension(width, (dimension.Height * width) / dimension.Width);
+
+        var height = width;
+        // w h
+        // ? h2
+
+        return new Dimension((dimension.Width * height) / dimension.Height, height);
+
+    }                                                                                                                                                                                                         // ?  h2
 }

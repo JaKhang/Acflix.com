@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Converter
 {
-    public class IDConverter : ValueConverter<ID, Guid>
+    public class IDConverter : ValueConverter<Id, Guid>
     {
-        public IDConverter(): base(v => v.Value, v => new ID(v))
+        public IDConverter(): base(v => v.Value, v => new Id(v))
         { 
         }
 

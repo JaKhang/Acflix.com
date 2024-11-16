@@ -20,6 +20,7 @@ namespace Infrastructure.Persistence.Config
 {
     public class FilmConfig : IEntityTypeConfiguration<Film>
     {
+        private static readonly char[] Separator = new[] { ',' };
 
         public void Configure(EntityTypeBuilder<Film> builder)
         {
@@ -34,119 +35,107 @@ namespace Infrastructure.Persistence.Config
             builder.Property(f => f.Country).HasMaxLength(2);
             builder.Property(f => f.Popularity).HasDefaultValue(0);
             builder.Property(f => f.PosterId).IsRequired(false);
+            builder.Property(f => f.CoverId).IsRequired(false);
             builder.Property(f => f.DirectorId).IsRequired(false);
             builder.Property(f => f.Quality).HasConversion<QualityConverter>();
             builder.Property(f => f.Status).HasConversion<FilmStatusConverter>();
-            builder.OwnsOne(f => f.ReleaseDate);
+            builder.OwnsOne(f => f.ReleaseDate,
+                (g) => { g.Property(p => p.Precision).HasConversion((t) => t.Id, (id) => Precision.FromId(id)); });
             builder.HasMany(f => f.Comments).WithOne().HasForeignKey("FilmId").OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(f => f.Votes).WithOne().HasForeignKey("FilmId").OnDelete(DeleteBehavior.Cascade);
-
-
             builder.Navigation(f => f.Genres).Metadata.SetField("_genres");
             builder.Property(f => f.Genres).HasConversion(
-                  v => string.Join(',', v.Select(t => t.Id)),
-                  v => v.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                  .Select(id => Genre.FromId(int.Parse(id)))
-                  .ToList()
-                );
+                v => string.Join(',', v.Select(t => t.Id)),
+                v => v.Split(Separator, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(id => Genre.FromId(int.Parse(id)))
+                    .ToList()
+            );
             builder.OwnsMany(film => film.ActorIds, ac =>
             {
                 ac.ToTable("FilmActorRelationship");
                 ac.Property(f => f.Value).HasColumnName("actorId");
                 ac.WithOwner().HasForeignKey("filmId");
                 ac.HasKey("filmId", "Value");
-
             });
             builder.OwnsMany(film => film.RelatedFilmIds, ac =>
             {
                 ac.ToTable("FilmRelatedFilmRelationship");
                 ac.Property(f => f.Value).HasColumnName("relatedFilmId");
                 ac.WithOwner().HasForeignKey("filmId");
-                ac.WithOwner().HasForeignKey("relatedFilmId");
                 ac.HasKey("filmId", "Value");
-
             });
-            builder.HasOne<Director>().WithMany().HasForeignKey(f => f.DirectorId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne<Director>().WithMany().HasForeignKey(f => f.DirectorId)
+                .OnDelete(DeleteBehavior.ClientCascade);
             builder.HasOne<Image>().WithMany().HasForeignKey(f => f.PosterId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne<Image>().WithMany().HasForeignKey(f => f.CoverId).OnDelete(DeleteBehavior.ClientCascade);
+
             builder.Navigation(f => f.Comments).Metadata.SetField("_comments");
             builder.Navigation(f => f.ActorIds).Metadata.SetField("_actorIds");
             builder.Navigation(f => f.Votes).Metadata.SetField("_votes");
             builder.Navigation(f => f.RelatedFilmIds).Metadata.SetField("_relatedFilmIds");
-
         }
     }
 
     public class SeriesConfig : IEntityTypeConfiguration<Series>
     {
-
         public void Configure(EntityTypeBuilder<Series> builder)
         {
             builder.ToTable("Series");
-            builder.HasMany(s => s.Episodes).WithOne().HasForeignKey(e => e.FilmId).OnDelete(DeleteBehavior.ClientCascade);
-
-                
+            builder.HasMany(s => s.Episodes).WithOne().HasForeignKey(e => e.FilmId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 
     public class MovieConfig : IEntityTypeConfiguration<Movie>
     {
-
         public void Configure(EntityTypeBuilder<Movie> builder)
         {
             builder.ToTable("Movies");
-            builder.HasOne(e => e.Video).WithMany().HasForeignKey(m => m.VideoId).OnDelete(DeleteBehavior.ClientCascade);
-
+            builder.HasOne(e => e.Video).WithMany().HasForeignKey(m => m.VideoId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 
     public class EpisodeConfig : IEntityTypeConfiguration<Episode>
     {
-
         public void Configure(EntityTypeBuilder<Episode> builder)
         {
             builder.ToTable("Episodes");
-            builder.HasOne(e => e.Video).WithMany().HasForeignKey(e => e.VideoId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(e => e.Video).WithMany().HasForeignKey(e => e.VideoId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 
     public class CommentConfig : IEntityTypeConfiguration<Comment>
     {
-
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
             builder.ToTable("Comments");
 
             builder.Property(c => c.UserId).HasConversion<IDConverter>();
-            builder.HasOne<Film>().WithMany(f => f.Comments).HasForeignKey(c => c.FilmId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne<Film>().WithMany(f => f.Comments).HasForeignKey(c => c.FilmId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
-
-
     }
 
     public class VoteConfig : IEntityTypeConfiguration<Vote>
     {
-
         public void Configure(EntityTypeBuilder<Vote> builder)
         {
-
             builder.ToTable("Votes");
             builder.Property(c => c.UserId).HasConversion<IDConverter>();
-            builder.HasOne<Film>().WithMany(f => f.Votes).HasForeignKey(c => c.FilmId).OnDelete(DeleteBehavior.ClientCascade);
-
+            builder.HasOne<Film>().WithMany(f => f.Votes).HasForeignKey(c => c.FilmId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
+
     public class VideoConfig : IEntityTypeConfiguration<Video>
     {
-
         public void Configure(EntityTypeBuilder<Video> builder)
         {
-
             builder.ToTable("Videos");
             builder.HasMany<Movie>().WithOne(f => f.Video).OnDelete(DeleteBehavior.ClientCascade);
             builder.HasMany<Episode>().WithOne(e => e.Video).OnDelete(DeleteBehavior.ClientCascade);
-
         }
     }
-
-
 }

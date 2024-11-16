@@ -5,12 +5,12 @@ namespace Domain.Actor.Entities
 {
     public class Actor : AggregateRoot
     {
-        public ID AvatarId { get; private set; }
+        public Id AvatarId { get; private set; }
         public string Name { get; private set; }
 
 
 
-        public Actor(ID avatarId, string name) : base(new())
+        public Actor(Id avatarId, string name) : base(new())
         {
             AvatarId = avatarId;
             Name = name;

@@ -12,7 +12,7 @@ namespace Domain.Image.Entities
         {
         }
 
-        public Variant(Dimension dimension, string reference, ID imageId) : base(new())
+        public Variant(Dimension dimension, string reference, Id imageId) : base(new())
         {
             Dimension = dimension;
             Reference = reference;
@@ -22,7 +22,7 @@ namespace Domain.Image.Entities
        
         public Dimension Dimension { get; protected set; }
         public string Reference { get; protected set; }
-        public ID ImageId { get; protected set; }
+        public Id ImageId { get; protected set; }
 
 
 
